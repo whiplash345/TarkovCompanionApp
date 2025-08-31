@@ -9,13 +9,20 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.56.1",
+    "@tanstack/react-query": "^5.85.6",
+    "axios": "^1.11.0",
     "expo": "~53.0.22",
+    "expo-constants": "^17.1.7",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
-    "react-native": "0.79.6"
+    "react-native": "0.79.6",
+    "zod": "^4.1.5",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@types/node": "^24.3.0",
     "@types/react": "~19.0.10",
     "typescript": "~5.8.3"
   },
