@@ -1,0 +1,14 @@
+Startup:
+
+1. open powershell and cd to the 'myapp' folder
+2. run 'git pull' if changes were made on other machine
+3. run 'npm ci' if dependencies were changed on other machine
+4. Start Android Emulator
+5. run 'adb devices' to confirm emulator running
+6. run 'npx expo start -c' to start expo
+7. press 'a' to start running in android emulator
+
+
+Shutdown:
+1. git commt and git push changes
+2. stop expo 'Ctrl+C'
