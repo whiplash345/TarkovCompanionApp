@@ -5,8 +5,9 @@ Startup:
 3. run 'npm ci' if dependencies were changed on other machine
 4. Start Android Emulator
 5. run 'adb devices' to confirm emulator running
-6. run 'npx expo start -c' to start expo
-7. press 'a' to start running in android emulator
+6. run 'adb reverse tcp:8081 tcp:8081' to prevent emulator from loosing connection
+7. run 'npx expo start -c' to start expo
+8. press 'a' to start running in android emulator
 
 
 Shutdown:
