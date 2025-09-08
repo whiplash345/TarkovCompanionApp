@@ -4,13 +4,16 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
-import { Image } from "react-native";
+import { Image, View, Text } from "react-native";
 
 // Import screens
 import TasksScreen from "../screens/TasksScreen";
 import HideoutScreen from "../screens/HideoutScreen";
 import ItemsScreen from "../screens/ItemsScreen";
 import CultistCircleScreen from "../screens/CultistCircleScreen";
+
+// Import Constants
+import { Colors } from "../constants/colors";
 
 // Define navigators
 const Tab = createBottomTabNavigator();
@@ -22,8 +25,8 @@ function BottomTabs() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false, // Hide Tab header
-        tabBarStyle: { backgroundColor: "#383838" },
-        tabBarActiveTintColor: "#c4a86d",
+        tabBarStyle: { backgroundColor: Colors.backgroundSecondary },
+        tabBarActiveTintColor: Colors.tanPrimary,
         tabBarShowLabel: false,
       }}
     >
@@ -88,16 +91,18 @@ export default function AppNavigator() {
     <NavigationContainer>
       <Drawer.Navigator
         screenOptions={{
-          headerStyle: { backgroundColor: "#212121" },
-          headerTintColor: "#fff",
+          headerShown: false,
           drawerType: "front",
-          headerShown: true, // Show header with hamburger menu
+          drawerStyle: {
+            backgroundColor: Colors.backgroundTetriary,
+            width: 250,
+          },
         }}
       >
         <Drawer.Screen
           name="Main"
           component={BottomTabs}
-          options={{ drawerLabel: "Home", title: "Tasks" }}
+          options={{ drawerLabel: "Home" }}
         />
       </Drawer.Navigator>
     </NavigationContainer>
