@@ -11,5 +11,7 @@ Startup:
 
 
 Shutdown:
-1. git commt and git push changes
-2. stop expo 'Ctrl+C'
+1. stop expo 'Ctrl+C'
+2. run 'git add .' in the VSCode Terminal
+3. run 'git commit -m "my message" in the VSCode Terminal
+4. run 'git push' in the VSCode Terminal
