@@ -3,14 +3,15 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Ionicons } from "@expo/vector-icons";
 import { Image, View, Text } from "react-native";
+import CustomDrawer from "./CustomDrawer";
 
 // Import screens
 import TasksScreen from "../screens/TasksScreen";
 import HideoutScreen from "../screens/HideoutScreen";
 import ItemsScreen from "../screens/ItemsScreen";
 import CultistCircleScreen from "../screens/CultistCircleScreen";
+import DebugScreen from "../screens/DebugScreen";
 
 // Import Constants
 import { Colors } from "../constants/colors";
@@ -90,6 +91,7 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Drawer.Navigator
+        drawerContent={props => <CustomDrawer {...props} />}
         screenOptions={{
           headerShown: false,
           drawerType: "front",
@@ -97,12 +99,21 @@ export default function AppNavigator() {
             backgroundColor: Colors.backgroundTetriary,
             width: 250,
           },
+          drawerLabelStyle: {
+            color: Colors.whitePrimary, // <-- Set your desired color here
+            fontSize: 16, // Optional: adjust font size
+          },
         }}
       >
         <Drawer.Screen
-          name="Main"
+          name="Home"
           component={BottomTabs}
           options={{ drawerLabel: "Home" }}
+        />
+        <Drawer.Screen
+          name="Debug"
+          component={DebugScreen}
+          options={{ drawerLabel: "Debug Console" }}
         />
       </Drawer.Navigator>
     </NavigationContainer>
