@@ -8,6 +8,7 @@ import { useUserLevel } from "../context/UserLevelContext";
 import { useCompletedTasks } from "../context/CompletedTasksContext";
 import { StatusBar } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { Modal } from "react-native";
 
 // Import Types
 import { Task, TaskRequirement } from "../types/TaskTypes";
@@ -18,6 +19,9 @@ import { enrichTasksWithBehindCount } from "../lib/enrichTasks";
 // Import Constants
 import { Colors } from "../constants/colors";
 import { useAppData } from "../context/AppDataContext";
+
+//Import Chat Bot Screen
+import ChatScreen from "../services/ChatScreen";
 
 type AppDataContextType = {
   tasks: Task[];
@@ -52,6 +56,10 @@ const allMaps = Array.from(new Set(tasksWithBehindCount.map(task => task.map?.na
 const allTraders = Array.from(new Set(tasksWithBehindCount.map(task => task.trader?.name).filter(Boolean)));
 
 const sortedTasks = [...visibleTasks].sort((a, b) => (b.behindCount ?? 0) - (a.behindCount ?? 0));
+
+const [chatVisible, setChatVisible] = useState(false);
+
+const chatBotData = useAppData();
 
   useFocusEffect(
   React.useCallback(() => {
@@ -232,6 +240,61 @@ async function markTaskComplete(taskName: string) {
           ))}
         </ScrollView>
       </View>
+      {/* Floating Chat Bubble */}
+      <View style={{
+        position: "absolute",
+        bottom: 24,
+        right: 24,
+        zIndex: 100,
+      }}>
+        <TouchableOpacity
+          onPress={() => setChatVisible(true)}
+          style={{
+            backgroundColor: "#2196F3",
+            borderRadius: 32,
+            width: 56,
+            height: 56,
+            justifyContent: "center",
+            alignItems: "center",
+            shadowColor: "#000",
+            shadowOpacity: 0.2,
+            shadowRadius: 6,
+            elevation: 6,
+          }}
+        >
+          <Ionicons name="chatbubble-ellipses-outline" size={32} color="#fff" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Chat Modal */}
+      <Modal
+        visible={chatVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setChatVisible(false)}
+      >
+        <View style={{
+          flex: 1,
+          justifyContent: "flex-end",
+          backgroundColor: "rgba(0,0,0,0.3)",
+        }}>
+          <View style={{
+            backgroundColor: "#222",
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+            padding: 20,
+            minHeight: 300,
+          }}>
+            <ChatScreen graphData={chatBotData} />
+            <TouchableOpacity
+              onPress={() => setChatVisible(false)}
+              style={{ alignSelf: "flex-end", marginTop: 10 }}
+            >
+              <Ionicons name="close" size={28} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
