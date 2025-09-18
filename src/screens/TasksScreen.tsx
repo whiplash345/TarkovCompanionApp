@@ -20,8 +20,9 @@ import { enrichTasksWithBehindCount } from "../lib/enrichTasks";
 import { Colors } from "../constants/colors";
 import { useAppData } from "../context/AppDataContext";
 
-//Import Chat Bot Screen
+//Import Chat Bot
 import ChatScreen from "../services/ChatScreen";
+import { ChatProvider } from "../context/ChatContext";
 
 type AppDataContextType = {
   tasks: Task[];
@@ -288,7 +289,12 @@ async function markTaskComplete(taskName: string) {
             <ChatScreen graphData={chatBotData} />
             <TouchableOpacity
               onPress={() => setChatVisible(false)}
-              style={{ alignSelf: "flex-end", marginTop: 10 }}
+              style={{
+              position: "absolute",
+              top: 16,
+              right: 16,
+              zIndex: 10,
+  }}
             >
               <Ionicons name="close" size={28} color="#fff" />
             </TouchableOpacity>
