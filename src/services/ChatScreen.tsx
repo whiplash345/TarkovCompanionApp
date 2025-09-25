@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, TextInput, Text, TouchableOpacity, StyleSheet, FlatList, KeyboardAvoidingView, Platform, Animated } from "react-native";
-import { askBot } from "./openai";
+import { askBot } from "./AskBot";``
 
-// If using React Navigation:
-import { useNavigation } from "@react-navigation/native";
-
+// Import Chat Message Loading Animation
 import LoadingDots from "../lib/LoadingDots";
 
+// Import Chat Context
 import { useChat } from "../context/ChatContext";
+import { formatReferenceData } from "./formatReferenceData";
 
 type Message = {
   text: string;
@@ -22,19 +22,17 @@ export default function ChatScreen({ graphData }: ChatScreenProps) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Use navigation to go back
-  const navigation = useNavigation();
-
-  const { messages, setMessages } = useChat();
+  const { messages, setMessages, referenceData } = useChat();
 
 
   const sendMessage = async () => {
     if (!input.trim()) return;
     const userMsg: Message = { text: input, sender: "user" };
+    const formattedReferenceData = formatReferenceData(userMsg.text, referenceData);
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setLoading(true);
-    const reply = await askBot(userMsg.text, graphData);
+    const reply = await askBot(userMsg.text, formattedReferenceData, messages);
     setMessages((prev) => [...prev, { text: reply, sender: "ai" }]);
     setLoading(false);
   };
