@@ -10,12 +10,13 @@ The progression feature will consist of three main frames:
 - Task Progression
 - Hideout Progression
 - Needed Items Progression
+- AI Chat Bot
 
 The cultist circle feature will consist of one frame that will allow the searching of items and value calculation to pass the needed amount.
 
 ## Technologies and Development Setup
 
-The app will be programmed in React Nativew and Type Script. It uses a GraphQL API pull from Tarkov.dev to get all necessary data to keep the app up to date. Everything is coded dynamically, so the app should update naturally when changes are made to tasks and such. I am developing the app primarily in VSCode while using an Android Studio emulator to view the progress. I have a supabase database ready, though I am not sure I want to use accounts for this app. With the direction I am going, I may just have users store their progress on their local devices. However, I will still be using this database as my own hub for API calls. Instead of having every user call Tarkov.dev every time there is an update, my database will make calls every 5 minutes (As suggested by Tarkov.dev for active updates) and all users will call from it for their updated app data. Anyone who would be developing along with me will need to install dependencies for git, TypeScript, React, and Expo. They would need to download VSCode for coding and Android Studio to run the emulator. The emulator is controlled entirely by expo. Specific steps for starting and finished a day's development are in the CodingHelp folder at the top of the root directory.
+The app will be programmed in React Nativew and Type Script. It uses a GraphQL API pull from Tarkov.dev to get all necessary data to keep the app up to date. Everything is coded dynamically, so the app should update naturally when changes are made to tasks and such. I am developing the app primarily in VSCode while using an Android Studio emulator to view the progress. I have a supabase database ready, though I am not sure I want to use accounts for this app. With the direction I am going, I may just have users store their progress on their local devices. However, I will still be using this database as my own hub for API calls. Instead of having every user call Tarkov.dev every time there is an update, my database will make calls every 5 minutes (As suggested by Tarkov.dev for active updates) and all users will call from it for their updated app data. Anyone who would be developing along with me will need to install dependencies for git, TypeScript, React, and Expo. They would need to download VSCode for coding and Android Studio to run the emulator. The emulator is controlled entirely by expo. Specific steps for starting and finished a day's development are in the CodingHelp folder at the top of the root directory. In addition to this, I will also be using a ChatGPT API call with a RAG using Chromo DB and BM25 to create a robust AI chat companion for anyone using the app.
 
 ## Installation
 
@@ -29,7 +30,6 @@ MIT License
 
 - whiplash345
 
-## Prorect status
+## Project status
 
-Pre-alpha development
-
+Alpha development
