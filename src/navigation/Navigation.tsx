@@ -1,16 +1,15 @@
-// Import Dependencies
-import React from "react";
+import React, { useState } from "react";
+import { Alert, Image, TouchableOpacity } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Image, View, Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import CustomDrawer from "./CustomDrawer";
 
 // Import screens
-import TasksScreen from "../screens/TasksScreen";
-import HideoutScreen from "../screens/HideoutScreen";
-import ItemsScreen from "../screens/ItemsScreen";
-import CultistCircleScreen from "../screens/CultistCircleScreen";
+import PathSelectionScreen from "../screens/PathSelectionScreen";
+import MainTasksScreen from "../screens/MainTasksScreen";
+import SideTasksScreen from "../screens/SideTasksScreen";
 import DebugScreen from "../screens/DebugScreen";
 
 // Import Constants
@@ -21,7 +20,11 @@ const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
 // Bottom tabs
-function BottomTabs() {
+function HomeScreen({
+  hasCompletedPathSelection,
+}: {
+  hasCompletedPathSelection: boolean;
+}) {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -33,33 +36,15 @@ function BottomTabs() {
     >
       <Tab.Screen
         name="Tasks"
-        component={TasksScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              source={require("../../assets/tasks.png")}
-              style={{ width: size * 1.45, height: size * 1.45, tintColor: color }}
-              resizeMode="contain"
-            />
-          ),
+        component={MainTasksScreen}
+        listeners={{
+          tabPress: e => {
+            if (!hasCompletedPathSelection) {
+              e.preventDefault();
+              alert("Please complete the path selection screen first.");
+            }
+          },
         }}
-      />
-      <Tab.Screen
-        name="Hideout"
-        component={HideoutScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              source={require("../../assets/house.png")}
-              style={{ width: size * 1.45, height: size * 1.45, tintColor: color }}
-              resizeMode="contain"
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Items"
-        component={ItemsScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Image
@@ -71,12 +56,20 @@ function BottomTabs() {
         }}
       />
       <Tab.Screen
-        name="Cultist Circle"
-        component={CultistCircleScreen}
+        name="Items"
+        component={SideTasksScreen}
+        listeners={{
+          tabPress: e => {
+            if (!hasCompletedPathSelection) {
+              e.preventDefault();
+              alert("Please complete the path selection screen first.");
+            }
+          },
+        }}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Image
-              source={require("../../assets/unheard.png")}
+              source={require("../../assets/tasks.png")}
               style={{ width: size * 1.45, height: size * 1.45, tintColor: color }}
               resizeMode="contain"
             />
@@ -88,27 +81,64 @@ function BottomTabs() {
 }
 
 export default function AppNavigator() {
+  const [hasCompletedPathSelection, setHasCompletedPathSelection] = useState(false);
+
+  const HomeScreenWrapper = () => (
+    <HomeScreen hasCompletedPathSelection={hasCompletedPathSelection} />
+  );
+
+  const PathSelectionRoute = (props: any) => (
+    <PathSelectionScreen
+      {...props}
+      onComplete={() => setHasCompletedPathSelection(true)}
+    />
+  );
+
+  if (!hasCompletedPathSelection) {
+    return (
+      <NavigationContainer>
+        <PathSelectionRoute />
+      </NavigationContainer>
+    );
+  }
+  
   return (
     <NavigationContainer>
       <Drawer.Navigator
         drawerContent={props => <CustomDrawer {...props} />}
-        screenOptions={{
-          headerShown: false,
-          drawerType: "front",
-          drawerStyle: {
-            backgroundColor: Colors.backgroundTetriary,
-            width: 250,
+        screenOptions={({ navigation }) => ({
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: Colors.backgroundSecondary,
+            borderBottomWidth: 2,
+            borderBottomColor: Colors.tanPrimary,
           },
+          headerTintColor: Colors.tanPrimary,
+          headerTitle: "Tarkov Companion",
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{ marginLeft: 12 }}>
+              <Ionicons name="menu" size={24} color={Colors.tanPrimary} />
+            </TouchableOpacity>
+          ),
+          drawerActiveTintColor: Colors.tanPrimary,
+          drawerInactiveTintColor: Colors.whitePrimary,
           drawerLabelStyle: {
-            color: Colors.whitePrimary, // <-- Set your desired color here
-            fontSize: 16, // Optional: adjust font size
+            color: Colors.whitePrimary,
           },
-        }}
+          drawerItemStyle: {
+            borderRadius: 8,
+          },
+        })}
       >
         <Drawer.Screen
           name="Home"
-          component={BottomTabs}
+          component={HomeScreenWrapper}
           options={{ drawerLabel: "Home" }}
+        />
+        <Drawer.Screen
+          name="Path Selection"
+          component={PathSelectionRoute}
+          options={{ drawerLabel: "Path Selection" }}
         />
         <Drawer.Screen
           name="Debug"
