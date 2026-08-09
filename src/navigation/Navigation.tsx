@@ -114,7 +114,7 @@ export default function AppNavigator() {
             borderBottomColor: Colors.tanPrimary,
           },
           headerTintColor: Colors.tanPrimary,
-          headerTitle: "Tarkov Companion",
+          headerTitle: "Choose a Path",
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{ marginLeft: 12 }}>
               <Ionicons name="menu" size={24} color={Colors.tanPrimary} />
