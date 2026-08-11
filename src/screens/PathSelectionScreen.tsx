@@ -22,7 +22,7 @@ type PathItem = {
 //Content for different paths
 const pathOptions: PathItem[] = [
   {
-    id: "savior",
+    id: "Savior",
     title: "Savior",
     image: require("../../assets/Savior_icon.webp"),
     difficulty: "Hard",
@@ -43,7 +43,7 @@ const pathOptions: PathItem[] = [
     note: "You will be able to change your choice later, but not once you cross a point of no return",
   },
   {
-    id: "fallen",
+    id: "Fallen",
     title: "Fallen",
     image: require("../../assets/Fallen_icon.webp"),
     difficulty: "Medium",
@@ -58,7 +58,7 @@ const pathOptions: PathItem[] = [
     note: "Best if you want a more narrative-driven reward path.",
   },
   {
-    id: "debtor",
+    id: "Debtor",
     title: "Debtor",
     image: require("../../assets/Debtor_icon.webp"),
     difficulty: "Easy",
@@ -73,7 +73,7 @@ const pathOptions: PathItem[] = [
     note: "Great for players who want a smoother start.",
   },
   {
-    id: "survivor",
+    id: "Survivor",
     title: "Survivor",
     image: require("../../assets/Survivor_icon.webp"),
     difficulty: "Hard",
@@ -90,15 +90,17 @@ const pathOptions: PathItem[] = [
 ];
 
 type Props = {
-  onComplete?: () => void;
+  onComplete?: (pathTag: string, navigation?: any) => void;
+  navigation?: any;
 };
 
-export default function PathSelectionScreen({ onComplete }: Props) {
+export default function PathSelectionScreen({ onComplete, navigation }: Props) {
   const [selectedPath, setSelectedPath] = useState<PathItem | null>(null);
 
   const handleChoose = () => {
+    if (!selectedPath) return;
+    onComplete?.(selectedPath.id, navigation);
     setSelectedPath(null);
-    onComplete?.();
   };
 
   return (
