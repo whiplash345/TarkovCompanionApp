@@ -14,6 +14,7 @@ import DebugScreen from "../screens/DebugScreen";
 
 // Import Constants
 import { Colors } from "../constants/colors";
+import { treeManager } from "../services/TreeBackend";
 
 // Define navigators
 const Tab = createBottomTabNavigator();
@@ -82,16 +83,25 @@ function HomeScreen({
 
 export default function AppNavigator() {
   const [hasCompletedPathSelection, setHasCompletedPathSelection] = useState(false);
+  const [selectedPathTag, setSelectedPathTag] = useState<string | null>(null);
 
+  const handlePathSelected = (tag: string, navigation?: any) => {
+    setSelectedPathTag(tag);
+    
+    if (hasCompletedPathSelection && navigation?.navigate) {
+      navigation.navigate("Home");
+    } else {
+      setHasCompletedPathSelection(true);
+    }
+
+  treeManager.setUserPathChoice(tag);
+  };
   const HomeScreenWrapper = () => (
     <HomeScreen hasCompletedPathSelection={hasCompletedPathSelection} />
   );
 
   const PathSelectionRoute = (props: any) => (
-    <PathSelectionScreen
-      {...props}
-      onComplete={() => setHasCompletedPathSelection(true)}
-    />
+  <PathSelectionScreen {...props} onComplete={(tag: string) => handlePathSelected(tag, props.navigation)} />
   );
 
   if (!hasCompletedPathSelection) {
@@ -114,7 +124,7 @@ export default function AppNavigator() {
             borderBottomColor: Colors.tanPrimary,
           },
           headerTintColor: Colors.tanPrimary,
-          headerTitle: "Choose a Path",
+          headerTitle: selectedPathTag ?? "Choose a Path",
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{ marginLeft: 12 }}>
               <Ionicons name="menu" size={24} color={Colors.tanPrimary} />
