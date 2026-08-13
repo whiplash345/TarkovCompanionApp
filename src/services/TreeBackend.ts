@@ -218,31 +218,113 @@ export class TreeManager {
 // src/services/TreeBackend.ts
 export const mainNodes: TreeNode[] = [
   {
-    id: "main_start",
+    id: "a1",
     type: "regular",
     title: "Find the Fallen Plane",
     description:
-      "Visit the fallen plane on Woods to complete this task. This is the first main tree node that all four paths will eventually converge on.",
+      "Visit the fallen plane on Woods.",
     choices: ["savior", "fallen", "debtor", "survivor"],
-    incoming: ["path_savior", "path_fallen", "path_debtor", "path_survivor"],
     outgoing: [
       {
-        id: "main_start->main_next_placeholder",
-        to: "main_next_placeholder",
-        label: "Continue",
+        id: "a1->a2",
+        to: "a2",
       },
     ],
   },
   {
-    id: "main_next_placeholder",
+    id: "a2",
     type: "regular",
-    title: "Next task placeholder",
-    description: "Next node not yet defined.",
+    title: "Obtain information",
+    description: "1. Visit Prapor in the trader menu. \n2. Obtain level 2 with prapor. \n3. Visit the other traders and ask about the fallen plane. \n- You do not need to hand Therapist $2,000",
     choices: ["savior", "fallen", "debtor", "survivor"],
+    outgoing: [
+      {
+        id: "a2->a3",
+        to: "a3",
+      },
+    ],
+  },
+  {
+    id: "a3",
+    type: "regular",
+    title: "Retrieve the flash drive from the SUV",
+    description: "Pick up the flash drive from the SUV on Shoreline. It will be on the running board of the SUV, which is near the tunnel extract.",
+    choices: ["savior", "fallen", "debtor", "survivor"],
+    outgoing: [
+      {
+        id: "a3->a4",
+        to: "a4",
+      },
+    ],
+  },
+  {
+    id: "a4",
+    type: "regular",
+    title: "Retrieve the flight recorder from the plane",
+    description: "1. You must wait an hour after completing the previous quest, then visit Prapor. \n2. Pick up the flight recorder from the crashed plane. It will be at the rear section of the plane where the tail in broken off.",
+    choices: ["savior", "fallen", "debtor", "survivor"],
+    outgoing: [
+      {
+        id: "a4->a5",
+        to: "a5",
+      },
+    ],
+  },
+  {
+    id: "a5",
+    type: "regular",
+    title: "Stash the flight recorder",
+    description: "Stash the flight recorder on Shoreline",
+    choices: ["savior", "fallen", "debtor", "survivor"],
+    outgoing: [
+      {
+        id: "a5->a6",
+        to: "a6",
+      },
+    ],
+  },
+  {
+    id: "a6",
+    type: "regular",
+    title: "Hand over tools to Prapor",
+    description: "Hand over found in raid tools to Prapor:\n- 2 toolsets\n- 3 rechargeable batteries\n- 5 printable circut boards",
+    choices: ["savior", "fallen", "debtor", "survivor"],
+    outgoing: [
+      {
+        id: "a6->a7",
+        to: "a7",
+      },
+    ],
+  },
+  {
+    id: "a7",
+    type: "regular",
+    title: "Find items on Shoreline",
+    description: "1. Wait 3-5 hours after completing last step\n2. Visit prapor and get more info on the fallen plane\n3. Go to Shoreline and find the Plane crew trandscript and Elektronik's flash drive\n4. Hand over items to Prapor",
+    choices: ["savior", "fallen", "debtor", "survivor"],
+    outgoing: [
+      {
+        id: "a7->a8",
+        to: "a8",
+      },
+    ],
+  },
+  {
+    id: "a8",
+    type: "regular",
+    title: "Retrieve the armored case",
+    description: "1. Wait 1-3 hours after completing last step then visit Prapor again (When he asks you if you read the transcript, answer \"Yes\" for an additional reward\n2. Retrieve the armored case from the fallen plane cockpit.\n3. Choose whether or not to keep the case for yourself.",
+    choices: ["savior", "fallen", "debtor", "survivor"],
+    outgoing: [
+      {
+        id: "a8->a9",
+        to: "a9",
+      },
+    ],
   },
 ];
 
-export const mainTree = new Tree("main", "main_start", mainNodes);
+export const mainTree = new Tree("main", "a1", mainNodes);
 export const treeManager = new TreeManager(mainTree, []);
 
 /* ---------------- Example skeleton (minimal) ----------------
