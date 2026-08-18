@@ -9,8 +9,6 @@ export interface Adjacency {
   label?: string;
   requiredSideTrees?: TreeId[];
   setsNoReturn?: boolean;
-  // If present, this adjacency is part of a specific path choice (e.g. "alpha")
-  // Null/undefined means it's available regardless of path selection.
   pathTag?: PathTag | null;
   metadata?: Record<string, any>;
 }
@@ -22,26 +20,20 @@ export interface BaseNode {
   title?: string;
   description?: string;
   isEnd?: boolean;
-  // If present, arriving at this node should show this message as a "point of no return"
   pointOfNoReturn?: { message: string };
-  // Up to four high-level path choices that this node can present (strings/tags).
-  // UI should enforce length <= 4 when you populate.
   choices?: (PathTag | null)[];
   metadata?: Record<string, any>;
-  // Optional explicit lists; incoming can be computed but you may pre-fill if convenient
   incoming?: NodeId[];
   outgoing?: Adjacency[];
 }
 
 export interface RegularNode extends BaseNode {
   type: "regular";
-  // regular nodes may have outgoing, but choice nodes are the typical place for branching
   outgoing?: Adjacency[];
 }
 
 export interface ChoiceNode extends BaseNode {
   type: "choice";
-  // choice nodes must present multiple outgoing options (2..4)
   outgoing: Adjacency[];
 }
 
@@ -82,11 +74,15 @@ export class Tree {
   }
 }
 
-/* What we store for a completed node: which node (from) or adjacency was used */
 export interface CompletedNodeInfo {
   from: NodeId | null;
   viaAdjacencyId?: string | null;
   completedAt: number;
+}
+
+export function normalizePathTag(tag?: PathTag | null): PathTag | null {
+  if (tag == null) return null;
+  return tag.trim().toLowerCase() as PathTag;
 }
 
 export class TreeManager {
@@ -94,14 +90,10 @@ export class TreeManager {
   sideTrees: Map<TreeId, Tree> = new Map();
   completedSideTrees: Set<TreeId> = new Set();
 
-  // navigation
-  currentPath: NodeId[] = []; // node id stack (in order visited)
+  currentPath: NodeId[] = [];
   completedNodes: Map<NodeId, CompletedNodeInfo> = new Map();
 
-  // lock state
   lockedToEnding = false;
-
-  // user's selected high-level path tag (chosen at app start)
   userPathChoice?: PathTag | null;
 
   constructor(mainTree: Tree, sideTrees: Tree[] = []) {
@@ -118,9 +110,107 @@ export class TreeManager {
     this.userPathChoice = undefined;
   }
 
-  // set the user's chosen path (one of the tags you'll place in nodes' `choices`)
   setUserPathChoice(tag: PathTag | null) {
-    this.userPathChoice = tag;
+    this.userPathChoice = normalizePathTag(tag);
+  }
+
+  nodeAllowsPath(nodeId: NodeId, pathTag?: PathTag | null): boolean {
+    const node = this.mainTree.getNode(nodeId);
+    if (!node?.choices?.length) return true;
+
+    const normalizedPath = normalizePathTag(pathTag);
+    if (normalizedPath == null) return true;
+
+    const allowedChoices = (node.choices ?? [])
+      .map((choice) => normalizePathTag(choice))
+      .filter((choice): choice is PathTag => choice != null);
+
+    return allowedChoices.includes(normalizedPath);
+  }
+
+  isAdjacencyAvailableForCurrentPath(adj: Adjacency): boolean {
+    const normalizedChoice = normalizePathTag(this.userPathChoice);
+    if (normalizedChoice == null) return true;
+
+    const adjacencyPathTag = normalizePathTag(adj.pathTag);
+    if (adjacencyPathTag != null && adjacencyPathTag !== normalizedChoice) {
+      return false;
+    }
+
+    if (!this.nodeAllowsPath(adj.to, normalizedChoice)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  getCurrentNode(): NodeId | undefined {
+    return this.currentPath.length ? this.currentPath[this.currentPath.length - 1] : undefined;
+  }
+
+  getAvailableNextAdjacencies(nodeId?: NodeId): Adjacency[] {
+    const nid = nodeId ?? this.getCurrentNode();
+    if (!nid) return [];
+
+    const outs = this.mainTree.getOutgoing(nid);
+
+    return outs.filter((adj) => {
+      if (adj.requiredSideTrees?.length) {
+        for (const sid of adj.requiredSideTrees) {
+          if (!this.isSideTreeComplete(sid)) return false;
+        }
+      }
+
+      if (this.lockedToEnding) {
+        return this.mainTree.isEndNode(adj.to);
+      }
+
+      if (!this.isAdjacencyAvailableForCurrentPath(adj)) {
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  moveToNode(toNodeId: NodeId): boolean {
+    const from = this.getCurrentNode();
+    if (!from) return false;
+
+    const adj = (this.mainTree.getOutgoing(from) ?? []).find((a) => a.to === toNodeId);
+    if (!adj) return false;
+
+    const allowed = this.getAvailableNextAdjacencies(from).some((a) => a.id === adj.id);
+    if (!allowed) return false;
+
+    this.currentPath.push(toNodeId);
+    this.completedNodes.set(toNodeId, {
+      from,
+      viaAdjacencyId: adj.id,
+      completedAt: Date.now(),
+    });
+
+    if (adj.setsNoReturn) this.lockedToEnding = true;
+
+    const dest = this.mainTree.getNode(toNodeId);
+    if (dest?.pointOfNoReturn) this.lockedToEnding = true;
+
+    return true;
+  }
+
+  goBack(): boolean {
+    if (this.lockedToEnding) return false;
+    if (this.currentPath.length <= 1) return false;
+
+    const removed = this.currentPath.pop()!;
+    this.completedNodes.delete(removed);
+
+    return true;
+  }
+
+  isAtEnd(): boolean {
+    const cur = this.getCurrentNode();
+    return cur ? this.mainTree.isEndNode(cur) : false;
   }
 
   addSideTree(tree: Tree) {
@@ -137,68 +227,6 @@ export class TreeManager {
     return this.completedSideTrees.has(sideTreeId);
   }
 
-  getCurrentNode(): NodeId | undefined {
-    return this.currentPath.length ? this.currentPath[this.currentPath.length - 1] : undefined;
-  }
-
-  // Available outgoing adjacencies from a node (applies path filter, side-tree requirements, and lock)
-  getAvailableNextAdjacencies(nodeId?: NodeId): Adjacency[] {
-    const nid = nodeId ?? this.getCurrentNode();
-    if (!nid) return [];
-    const outs = this.mainTree.getOutgoing(nid);
-    return outs.filter((adj) => {
-      // side-tree gating
-      if (adj.requiredSideTrees?.length) {
-        for (const sid of adj.requiredSideTrees) if (!this.isSideTreeComplete(sid)) return false;
-      }
-      // lock: allow only moves to end nodes when locked
-      if (this.lockedToEnding) {
-        return this.mainTree.isEndNode(adj.to);
-      }
-      // path focus: if adjacency has pathTag and user chose a path, only show when they match
-      if (adj.pathTag != null && this.userPathChoice != null) {
-        return adj.pathTag === this.userPathChoice;
-      }
-      // if adjacency has no pathTag, it's always available regardless of user's path choice
-      return true;
-    });
-  }
-
-  // Move from current node to the specified nodeId (records which 'from' and which adjacency)
-  moveToNode(toNodeId: NodeId): boolean {
-    const from = this.getCurrentNode();
-    if (!from) return false;
-    // find an adjacency from current node that goes to toNodeId and is allowed
-    const adj = (this.mainTree.getOutgoing(from) ?? []).find((a) => a.to === toNodeId);
-    if (!adj) return false;
-    // verify it's available under current filters
-    const allowed = this.getAvailableNextAdjacencies(from).some((a) => a.id === adj.id);
-    if (!allowed) return false;
-    // apply move
-    this.currentPath.push(toNodeId);
-    this.completedNodes.set(toNodeId, { from, viaAdjacencyId: adj.id, completedAt: Date.now() });
-    // check locks
-    if (adj.setsNoReturn) this.lockedToEnding = true;
-    const dest = this.mainTree.getNode(toNodeId);
-    if (dest?.pointOfNoReturn) this.lockedToEnding = true;
-    return true;
-  }
-
-  // Back navigation (records removed). Blocked if lockedToEnding.
-  goBack(): boolean {
-    if (this.lockedToEnding) return false;
-    if (this.currentPath.length <= 1) return false;
-    const removed = this.currentPath.pop()!;
-    this.completedNodes.delete(removed);
-    return true;
-  }
-
-  isAtEnd(): boolean {
-    const cur = this.getCurrentNode();
-    return cur ? this.mainTree.isEndNode(cur) : false;
-  }
-
-  // Shallow view for UI
   getStateView() {
     return {
       currentNode: this.getCurrentNode(),
@@ -223,7 +251,7 @@ export const mainNodes: TreeNode[] = [
     title: "Find the Fallen Plane",
     description:
       "Visit the fallen plane on Woods.",
-    choices: ["savior", "fallen", "debtor", "survivor"],
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
         id: "a1->a2",
@@ -236,7 +264,7 @@ export const mainNodes: TreeNode[] = [
     type: "regular",
     title: "Obtain information",
     description: "1. Visit Prapor in the trader menu. \n2. Obtain level 2 with prapor. \n3. Visit the other traders and ask about the fallen plane. \n- You do not need to hand Therapist $2,000",
-    choices: ["savior", "fallen", "debtor", "survivor"],
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
         id: "a2->a3",
@@ -249,7 +277,7 @@ export const mainNodes: TreeNode[] = [
     type: "regular",
     title: "Retrieve the flash drive from the SUV",
     description: "Pick up the flash drive from the SUV on Shoreline. It will be on the running board of the SUV, which is near the tunnel extract.",
-    choices: ["savior", "fallen", "debtor", "survivor"],
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
         id: "a3->a4",
@@ -262,7 +290,7 @@ export const mainNodes: TreeNode[] = [
     type: "regular",
     title: "Retrieve the flight recorder from the plane",
     description: "1. You must wait an hour after completing the previous quest, then visit Prapor. \n2. Pick up the flight recorder from the crashed plane. It will be at the rear section of the plane where the tail in broken off.",
-    choices: ["savior", "fallen", "debtor", "survivor"],
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
         id: "a4->a5",
@@ -275,7 +303,7 @@ export const mainNodes: TreeNode[] = [
     type: "regular",
     title: "Stash the flight recorder",
     description: "Stash the flight recorder on Shoreline",
-    choices: ["savior", "fallen", "debtor", "survivor"],
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
         id: "a5->a6",
@@ -288,7 +316,7 @@ export const mainNodes: TreeNode[] = [
     type: "regular",
     title: "Hand over tools to Prapor",
     description: "Hand over found in raid tools to Prapor:\n- 2 toolsets\n- 3 rechargeable batteries\n- 5 printable circut boards",
-    choices: ["savior", "fallen", "debtor", "survivor"],
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
         id: "a6->a7",
@@ -301,7 +329,7 @@ export const mainNodes: TreeNode[] = [
     type: "regular",
     title: "Find items on Shoreline",
     description: "1. Wait 3-5 hours after completing last step\n2. Visit prapor and get more info on the fallen plane\n3. Go to Shoreline and find the Plane crew trandscript and Elektronik's flash drive\n4. Hand over items to Prapor",
-    choices: ["savior", "fallen", "debtor", "survivor"],
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
         id: "a7->a8",
@@ -313,8 +341,8 @@ export const mainNodes: TreeNode[] = [
     id: "a8",
     type: "regular",
     title: "Retrieve the armored case",
-    description: "1. Wait 1-3 hours after completing last step then visit Prapor again (When he asks you if you read the transcript, answer \"Yes\" for an additional reward\n2. Retrieve the armored case from the fallen plane cockpit.\n3. Choose whether or not to keep the case for yourself.",
-    choices: ["savior", "fallen", "debtor", "survivor"],
+    description: "1. Wait 1-3 hours after completing last step then visit Prapor again (When he asks you if you read the transcript, answer \"Yes\" for an additional reward\n2. Retrieve the armored case from the fallen plane cockpit.",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
         id: "a8->a9",
@@ -322,33 +350,52 @@ export const mainNodes: TreeNode[] = [
       },
     ],
   },
+  {
+    id: "a9",
+    type: "choice",
+    title: "Choose what to do with the case",
+    description: "You must choose whether to keep the case for yourself or hand it to Prapor. Handing it to Prapor can help with the Survivor and Debtor endings, but may hinder the Savior and Fallen endings.",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "a9->b-2",
+        to: "b2",
+        label: "Keep the case",
+      },
+      {
+        id: "a9->b1-1",
+        to: "b1-1",
+        label: "Hand over the case",
+      },
+    ],
+  },
+  {
+    id: "b1-1",
+    type: "regular",
+    title: "Find compromising material on Prapor",
+    description: "",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "b1-1->b2",
+        to: "b2",
+      },
+    ],
+  },
+  {
+    id: "b2",
+    type: "regular",
+    title: "You have the case",
+    description: "",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "",
+        to: "",
+      },
+    ],
+  },
 ];
 
 export const mainTree = new Tree("main", "a1", mainNodes);
 export const treeManager = new TreeManager(mainTree, []);
-
-/* ---------------- Example skeleton (minimal) ----------------
-const mainNodes: TreeNode[] = [
-  {
-    id: "start",
-    type: "choice",
-    title: "Choose your path",
-    choices: ["alpha", "bravo", "charlie", "delta"],
-    outgoing: [
-      { id: "start->a", to: "a", label: "Begin A", pathTag: "alpha" },
-      { id: "start->b", to: "b", label: "Begin B", pathTag: "bravo" },
-      // a fallback option without pathTag is available regardless of choice
-      { id: "start->quick", to: "quick_end", label: "Quick end" },
-    ],
-  },
-  { id: "a", type: "regular", title: "Node A", outgoing: [{ id: "a->end1", to: "end1", label: "End 1", pathTag: "alpha", setsNoReturn: true }] },
-  { id: "b", type: "regular", title: "Node B", outgoing: [{ id: "b->end2", to: "end2", label: "End 2", pathTag: "bravo" }] },
-  { id: "quick_end", type: "regular", title: "Quick End", isEnd: true },
-  { id: "end1", type: "regular", title: "Alpha End", isEnd: true, pointOfNoReturn: { message: "This ending is permanent." } },
-  { id: "end2", type: "regular", title: "Bravo End", isEnd: true },
-];
-
-const mainTree = new Tree("main", "start", mainNodes);
-const manager = new TreeManager(mainTree, []);
-// then in UI: call manager.setUserPathChoice("alpha") after the user's initial pick
--------------------------------------------------------------------------- */

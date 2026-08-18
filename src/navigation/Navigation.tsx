@@ -87,14 +87,14 @@ export default function AppNavigator() {
 
   const handlePathSelected = (tag: string, navigation?: any) => {
     setSelectedPathTag(tag);
-    
+
     if (hasCompletedPathSelection && navigation?.navigate) {
       navigation.navigate("Home");
     } else {
       setHasCompletedPathSelection(true);
     }
 
-  treeManager.setUserPathChoice(tag);
+    treeManager.setUserPathChoice(tag);
   };
   const HomeScreenWrapper = () => (
     <HomeScreen hasCompletedPathSelection={hasCompletedPathSelection} />

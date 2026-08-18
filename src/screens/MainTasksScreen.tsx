@@ -1,5 +1,4 @@
-// src/screens/MainTasksScreen.tsx
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -8,11 +7,19 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { treeManager, mainTree } from "../services/TreeBackend";
 
 export default function MainTasksScreen() {
+  const [, setRefreshTick] = useState(0);
 
-  const [state, setState] = useState(treeManager.getStateView());
+  useFocusEffect(
+    useCallback(() => {
+      setRefreshTick((tick) => tick + 1);
+    }, [])
+  );
+
+  const state = treeManager.getStateView();
 
   const currentNode = useMemo(
     () => mainTree.getNode(state.currentNode ?? ""),
@@ -20,19 +27,26 @@ export default function MainTasksScreen() {
   );
 
   const nextAdjacency = state.availableNextAdjacencies[0];
+  const hasPreviousNode = state.currentPath.length > 1;
+  const isChoiceNode = currentNode?.type === "choice";
 
   const handleComplete = () => {
     if (!nextAdjacency) return;
     treeManager.moveToNode(nextAdjacency.to);
-    setState(treeManager.getStateView());
+    setRefreshTick((tick) => tick + 1);
   };
 
-  const hasPreviousNode = state.currentPath.length > 1;
+  const handleChoiceComplete = (adjacency: { to: string; id: string; label?: string }) => {
+    if (!treeManager.isAdjacencyAvailableForCurrentPath(adjacency)) return;
+
+    treeManager.moveToNode(adjacency.to);
+    setRefreshTick((tick) => tick + 1);
+  };
 
   const handleUncomplete = () => {
     if (!hasPreviousNode) return;
     treeManager.goBack();
-    setState(treeManager.getStateView());
+    setRefreshTick((tick) => tick + 1);
   };
 
   return (
@@ -53,29 +67,92 @@ export default function MainTasksScreen() {
 
         <View style={styles.descriptionBox}>
           <Text style={styles.descriptionText}>
-            {currentNode?.description ??
-              "This task card shows the current objective description."}
+            {currentNode?.description ?? "This task card shows the current objective description."}
           </Text>
         </View>
 
-        <View style={styles.buttonRow}>
-          <TouchableOpacity
-            style={[styles.button, hasPreviousNode ? styles.buttonInactive : styles.buttonDisabled]}
-            activeOpacity={0.7}
-            onPress={handleUncomplete}
-            disabled={!hasPreviousNode}
-          >
-            <Text style={styles.buttonText}>Uncomplete</Text>
-          </TouchableOpacity>
+        {isChoiceNode && currentNode?.type === "choice" ? (
+          <View style={styles.choiceContainer}>
+            {currentNode.outgoing.slice(0, 2).map((adjacency) => {
+              const isEnabled = treeManager.isAdjacencyAvailableForCurrentPath(adjacency);
 
-          <TouchableOpacity
-            style={[styles.button, styles.buttonActive]}
-            onPress={handleComplete}
-            disabled={!nextAdjacency}
-          >
-            <Text style={styles.buttonText}>Complete</Text>
-          </TouchableOpacity>
-        </View>
+              return (
+                <TouchableOpacity
+                  key={adjacency.id}
+                  style={[
+                    styles.choiceButton,
+                    isEnabled ? styles.choiceButtonActive : styles.choiceButtonDisabled,
+                  ]}
+                  activeOpacity={isEnabled ? 0.85 : 1}
+                  disabled={!isEnabled}
+                  onPress={() => handleChoiceComplete(adjacency)}
+                >
+                  <Text style={styles.choiceButtonText}>
+                    {adjacency.label ?? "Continue"}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+
+            <TouchableOpacity
+              style={[
+                styles.button,
+                hasPreviousNode ? styles.buttonDangerActive : styles.buttonDangerDisabled,
+              ]}
+              activeOpacity={0.7}
+              onPress={handleUncomplete}
+              disabled={!hasPreviousNode}
+            >
+              <Text
+                style={[
+                  styles.buttonText,
+                  !hasPreviousNode && styles.buttonTextDisabled,
+                ]}
+              >
+                Uncomplete
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                hasPreviousNode ? styles.buttonDangerActive : styles.buttonDangerDisabled,
+              ]}
+              activeOpacity={0.7}
+              onPress={handleUncomplete}
+              disabled={!hasPreviousNode}
+            >
+              <Text
+                style={[
+                  styles.buttonText,
+                  !hasPreviousNode && styles.buttonTextDisabled,
+                ]}
+              >
+                Uncomplete
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.button,
+                nextAdjacency ? styles.buttonSuccessActive : styles.buttonSuccessDisabled,
+              ]}
+              onPress={handleComplete}
+              disabled={!nextAdjacency}
+            >
+              <Text
+                style={[
+                  styles.buttonText,
+                  !nextAdjacency && styles.buttonTextDisabled,
+                ]}
+              >
+                Complete
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -141,6 +218,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
+  choiceContainer: {
+    gap: 12,
+  },
+  choiceButton: {
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  choiceButtonActive: {
+    backgroundColor: "#0a0",
+  },
+  choiceButtonDisabled: {
+    backgroundColor: "#2f2f2f",
+    opacity: 0.35,
+  },
+  choiceButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "700",
+  },
   buttonRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -152,19 +250,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 4,
   },
-  buttonDisabled: {
-    backgroundColor: "#800",
-    opacity: 0.2,
+  buttonDangerActive: {
+    backgroundColor: "#7a1d1d",
   },
-  buttonInactive: {
-  backgroundColor: "#550000",
+  buttonDangerDisabled: {
+    backgroundColor: "#2f2f2f",
   },
-  buttonActive: {
+  buttonSuccessActive: {
     backgroundColor: "#0a0",
+  },
+  buttonSuccessDisabled: {
+    backgroundColor: "#2f2f2f",
   },
   buttonText: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "700",
+  },
+  buttonTextDisabled: {
+    opacity: 0.45,
   },
 });
