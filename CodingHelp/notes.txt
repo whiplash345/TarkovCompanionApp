@@ -1,0 +1,2 @@
+- Path locking on choices (can't click other path options) isn't working
+- UI for lots of text on choice b3 sends uncomplete button off screen
