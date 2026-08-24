@@ -1,7 +1,6 @@
-// Tree backend framework — paste to src/services/TreeBackend.ts
 export type NodeId = string;
 export type TreeId = string;
-export type PathTag = string; // a string representing one of up to 4 path choices
+export type PathTag = string;
 
 export interface Adjacency {
   id: string;
@@ -354,18 +353,18 @@ export const mainNodes: TreeNode[] = [
     id: "a9",
     type: "choice",
     title: "Choose what to do with the case",
-    description: "You must choose whether to keep the case for yourself or hand it to Prapor. Handing it to Prapor can help with the Survivor and Debtor endings, but may hinder the Savior and Fallen endings.",
+    description: "You must choose whether to keep the case for yourself or hand it to Prapor. Handing it to Prapor can help with the Survivor and Debtor endings, but may hinder the Savior and Fallen endings. Either option will not stop you from completing any of the four endings",
     choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
         id: "a9->b-2",
         to: "b2",
-        label: "Keep the case",
+        label: "Keep the case (\"The case stays with me\")",
       },
       {
         id: "a9->b1-1",
         to: "b1-1",
-        label: "Hand over the case",
+        label: "Hand over the case (Other two options)",
       },
     ],
   },
@@ -373,11 +372,50 @@ export const mainNodes: TreeNode[] = [
     id: "b1-1",
     type: "regular",
     title: "Find compromising material on Prapor",
-    description: "",
+    description: "1. Make sure you Intelligence center level 1 is built.\n2. Wait for Mr. Kerman to contact you via the intelligence center.\n3. Attempt to find compromising material on Prapor at his camp on Lighthouse.",
     choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
-        id: "b1-1->b2",
+        id: "b1-1->b1-2",
+        to: "b1-2",
+      },
+    ],
+  },
+  {
+    id: "b1-2",
+    type: "regular",
+    title: "Gain access to Lightkeeper",
+    description: "Prapors camp yeilded no result, you must gain access to Lightkeeper. Talk to Kerman then Mechanic and you should gain access to the Tarkov side task \"Network Provider Part 1.\". If you do not, you must continue to level you traders with other side tasks until you do. Complete this side task line to gain access to Lightkeeper.",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "b1-2->b1-3",
+        to: "b1-3",
+      },
+    ],
+  },
+  {
+    id: "b1-3",
+    type: "regular",
+    title: "Talk to Lightkeeper",
+    description: "Visit Lightkeeper on Lighthouse. He will ask you to bring him 3 blue folders, which you can purchase on the flea market if you like.",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "b1-3->b1-4",
+        to: "b1-4",
+      },
+    ],
+  },
+  {
+    id: "b1-4",
+    type: "regular",
+    title: "Talk to Lightkeeper again",
+    description: "Visit Lightkeeper again and turn in the blue folders. He will then ask you to do something on Interchange. You must go in front of the shopping mall and fire a yellow flare. Once you do this, you must kill 15 targets then survive and extract all in one raid. Once you complete this, return to Lightkeeper and he will give you the case you lost to Prapor (goes into character special slot). ",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "b1-4->b2",
         to: "b2",
       },
     ],
@@ -386,12 +424,57 @@ export const mainNodes: TreeNode[] = [
     id: "b2",
     type: "regular",
     title: "You have the case",
+    description: "You have the case, but now you must unlock it. Kerman will contact you and send you to talk to Mechanic to learn of a tool you will need from Labratory. This tool can spawn in several places on Labs, so you may need to check them all in a raid to get it. After retrieving the tool, you will get a craft in your level 1 workbench to unlock the case.",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "b2->b3",
+        to: "b3",
+      },
+    ],
+  },
+  {
+    id: "b3",
+    type: "choice",
+    title: "The case is opened",
+    description: "After crafting the case, you will be able to open it in your stash. Amongst valuables, this case will have a keycard belonging to Kroglov and instructions on how to use it. Read the instructions and questions the traders on it. Once you talk to Kerman, you will get a choice to continue working with him or not. This choice is crucial to the ending you are trying to achieve.\n1. If you work with Kerman you will be able to achieve Savior, Debtor, or Fallen. If you attempt and fail certain steps in Savior, you may be redirected to Survior even after choosing to work with Kerman.\n2. If you choose to not work with Kerman, you will only be able to complete Survivor",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "b3->c1",
+        to: "c1",
+        label: "Work with Kerman",
+      },
+      {
+        id: "b3->d1",
+        to: "d1",
+        label: "Don't work with Kerman",
+      },
+    ],
+  },
+  {
+    id: "c1",
+    type: "regular",
+    title: "Work with Kerman",
     description: "",
     choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
-        id: "",
-        to: "",
+        id: "b2->b3",
+        to: "b3",
+      },
+    ],
+  },
+  {
+    id: "d1",
+    type: "regular",
+    title: "Don't work with Kerman",
+    description: "",
+    choices: ["Survivor"],
+    outgoing: [
+      {
+        id: "b2->b3",
+        to: "b3",
       },
     ],
   },
