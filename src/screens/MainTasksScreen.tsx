@@ -96,7 +96,7 @@ export default function MainTasksScreen() {
 
             <TouchableOpacity
               style={[
-                styles.button,
+                styles.choiceUncompleteButton,
                 hasPreviousNode ? styles.buttonDangerActive : styles.buttonDangerDisabled,
               ]}
               activeOpacity={0.7}
@@ -238,6 +238,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "700",
+  },
+  choiceUncompleteButton: {
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: "center",
+    marginHorizontal: 4,
   },
   buttonRow: {
     flexDirection: "row",
