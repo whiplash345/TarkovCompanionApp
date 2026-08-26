@@ -455,26 +455,161 @@ export const mainNodes: TreeNode[] = [
   {
     id: "c1",
     type: "regular",
-    title: "Work with Kerman",
-    description: "",
+    title: "Obtain the master keycard",
+    description: "Kerman will tell you to obtain the master keycard. You can find it on Labs inside the safe in Kruglov's office.",
     choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
-        id: "b2->b3",
-        to: "b3",
+        id: "c1->c2",
+        to: "c2",
+      },
+    ],
+  },
+  {
+    id: "c2",
+    type: "regular",
+    title: "Obtain the master keycard",
+    description: "Kerman will tell you to obtain the master keycard. You can find it on Labs inside the safe in Kruglov's office.",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "c2->c3",
+        to: "c3",
+      },
+    ],
+  },
+  {
+    id: "c3",
+    type: "regular",
+    title: "Speak with Mechanic",
+    description: "Kerman also asked you to find an RFID device in Labs, but you will not. You must speak to Mechanic and pay him 40 bitcoins.",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "c3->c4",
+        to: "c4",
+      },
+    ],
+  },
+  {
+    id: "c4",
+    type: "regular",
+    title: "Retrieve the RFID device",
+    description: "After paying Mechanic, he will give you a key to a room on Streets. Go to it, and search the room until you find the RFID device. Survive and extract with it, then you can start a craft to make a keycard.",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "c4->c5",
+        to: "c5",
+      },
+    ],
+  },
+  {
+    id: "c5",
+    type: "choice",
+    title: "Swipe your keycard",
+    description: "Once your craft is done, head to the port on Shoreline and swipe your keycard. Once done, you will be given a choice to help Kerman. If you do not help Kerman, you will be set on the Fallen ending. If you do help Kerman, you will be set on the other 3 endings.",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "c5->c6",
+        to: "c6",
+        label: "Help Kerman",
+      },
+      {
+        id: "c5->f1",
+        to: "f1",
+        label: "Don't help Kerman",
+      },
+    ],
+  },
+  {
+    id: "c6",
+    type: "choice",
+    title: "Hand in evidence",
+    description: "Kerman will now ask you to hand in evidence, which will determine the ending you pursue.\n1. If you want the Debtor ending, make sure you have completed at least 2 of the other side story tasks. When Kerman asks for evidence, hand in 2 pieces, then choose to stop working with him.\n2. If you want the Savior ending, make sure you have completed all of the side story tasks and listened to every tape. After handing Kerman 2 pieces of evidence, hand him the other 6.\n3. If you try to hand Kerman more than 2 pieces of evidence, but have not listened to every tape or obtained the other 6 main evidence pieces, you will be redirected onto the Survivor path.",
+    choices: ["Savior", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "c6->c7",
+        to: "c7",
+        label: "Hand Kerman more than 2 evidence pieces",
+      },
+      {
+        id: "c5->f1",
+        to: "e1",
+        label: "Hand Kerman 2 evidence pieces",
+      },
+    ],
+  },
+  {
+    id: "c7",
+    type: "choice",
+    title: "Hand in evidence part 2",
+    description: "You have chosen to try for Savior. You must hand over all evidence, otherwise you will be redirected to Survivor",
+    choices: ["Savior", "Survivor"],
+    outgoing: [
+      {
+        id: "c7->c8",
+        to: "c8",
+        label: "Hand Kerman all evidence",
+      },
+      {
+        id: "c7->d1",
+        to: "d1",
+        label: "Fail to gather all evidence",
+      },
+    ],
+  },
+  {
+    id: "c8",
+    type: "regular",
+    title: "Savior",
+    description: "",
+    choices: ["Savior", "Survivor"],
+    outgoing: [
+      {
+        id: "c8->c9",
+        to: "c9",
       },
     ],
   },
   {
     id: "d1",
     type: "regular",
-    title: "Don't work with Kerman",
+    title: "Don't work with Kerman (Survivor)",
     description: "",
     choices: ["Survivor"],
     outgoing: [
       {
-        id: "b2->b3",
-        to: "b3",
+        id: "d1->d2",
+        to: "d2",
+      },
+    ],
+  },
+  {
+    id: "e1",
+    type: "regular",
+    title: "Debtor",
+    description: "",
+    choices: ["Debtor"],
+    outgoing: [
+      {
+        id: "d1->d2",
+        to: "d2",
+      },
+    ],
+  },
+  {
+    id: "f1",
+    type: "regular",
+    title: "Fallen",
+    description: "",
+    choices: ["Fallen"],
+    outgoing: [
+      {
+        id: "d1->d2",
+        to: "d2",
       },
     ],
   },
