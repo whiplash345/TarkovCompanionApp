@@ -556,8 +556,8 @@ export const mainNodes: TreeNode[] = [
         label: "Hand Kerman all evidence",
       },
       {
-        id: "c8->d1",
-        to: "d1",
+        id: "c8->d2",
+        to: "d2",
         label: "Fail to gather all evidence",
       },
     ],
@@ -620,8 +620,8 @@ export const mainNodes: TreeNode[] = [
         label: "Complete \"The Price of Independence\"",
       },
       {
-        id: "c11->d1",
-        to: "d1",
+        id: "c11->d2",
+        to: "d2",
         label: "Side with Skier",
       },
     ],
@@ -638,8 +638,8 @@ export const mainNodes: TreeNode[] = [
   {
     id: "d1",
     type: "regular",
-    title: "Don't work with Kerman (Survivor)",
-    description: "",
+    title: "Don't work with Kerman",
+    description: "You have chosen not work with Kerman. Head to Shoreline and swipe your keycard you got from the case at the intercom. You will get the \"Easy Way\" achievement.",
     choices: ["Survivor"],
     outgoing: [
       {
@@ -647,6 +647,45 @@ export const mainNodes: TreeNode[] = [
         to: "d2",
       },
     ],
+  },
+  {
+    id: "d2",
+    type: "choice",
+    title: "Talk to Prapor",
+    description: "You got here one of two ways, either you chose not to work with Kerman, or you failed the Savior path. Regardless, you must now talk to Prapor. He will ask you for a large sum of money. If you gave Prapor the case at the beginning, your path will be easier, and you only have to pay him 300 million rubles. If you chose to keep the case for yourself, you will have to complete a hard task line and pay 500 million rubles. Once you turn in the 500 million, you will have only 72 hours to complete Prapor's task line, otherwise it will fail and he will require you to turn in Secure Container Kappa to proceed further",
+    choices: ["Survivor"],
+    outgoing: [
+      {
+        id: "d2->d3",
+        to: "d3",
+        label: "You gave the case to Prapor (pay 300 million)",
+      },
+      {
+        id: "d2->d2-2",
+        to: "d2-2",
+        label: "You kept the case for yourself (pay 500 million)",
+      },
+    ],
+  },
+  {
+    id: "d2-2",
+    type: "regular",
+    title: "Find Terragroup folders",
+    description: "Go to Labs and find 1 of each Terragroup folder (Finances, Personnel, Development, Reports). Once you have all 4, you must craft an incriminating flash drive in your hideout which takes 5 hours. Next, you must kill 50 targets on Streets. Finally, you must kill 4 PMCs in one raid and survive. If you take more than 72 hours to complete this, the task will fail and require a Kappa container instead.",
+    choices: ["Survivor"],
+    outgoing: [
+      {
+        id: "d2-2->d3",
+        to: "d3",
+      },
+    ],
+  },
+  {
+    id: "d3",
+    type: "regular",
+    title: "Survivor ending",
+    description: "You've survived this far, but now you must escape. Prapor will hand you a note for the soldiers at the terminal. Head to Shoreline between 21:00 and 06:00. Talk to the intercom and swipe your keycard (note), then approach the terminal gate with your knife out. You can now attempt to escape Tarkov. If you fail the first time, don't worry, you can buy another note from Prapor to try again for 5 million rubles.",
+    choices: ["Survivor"],
   },
   {
     id: "e1",
