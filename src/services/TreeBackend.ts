@@ -460,24 +460,12 @@ export const mainNodes: TreeNode[] = [
     choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
-        id: "c1->c2",
-        to: "c2",
-      },
-    ],
-  },
-  {
-    id: "c2",
-    type: "regular",
-    title: "Obtain the master keycard",
-    description: "Kerman will tell you to obtain the master keycard. You can find it on Labs inside the safe in Kruglov's office.",
-    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
-    outgoing: [
-      {
-        id: "c2->c3",
+        id: "c1->c3",
         to: "c3",
       },
     ],
   },
+  // C2 is accidentally skipped. Maybe bring all IDs back by one later.
   {
     id: "c3",
     type: "regular",
@@ -525,53 +513,126 @@ export const mainNodes: TreeNode[] = [
   },
   {
     id: "c6",
-    type: "choice",
-    title: "Hand in evidence",
-    description: "Kerman will now ask you to hand in evidence, which will determine the ending you pursue.\n1. If you want the Debtor ending, make sure you have completed at least 2 of the other side story tasks. When Kerman asks for evidence, hand in 2 pieces, then choose to stop working with him.\n2. If you want the Savior ending, make sure you have completed all of the side story tasks and listened to every tape. After handing Kerman 2 pieces of evidence, hand him the other 6.\n3. If you try to hand Kerman more than 2 pieces of evidence, but have not listened to every tape or obtained the other 6 main evidence pieces, you will be redirected onto the Survivor path.",
-    choices: ["Savior", "Debtor", "Survivor"],
+    type: "regular",
+    title: "Hand in minor evidence",
+    description: "Kerman will now ask for dirt on Terragroup. To start, there are 36 pieces of minor evidence you can collect from the side story tasks. If you turn all of them in, you will get an achievement called \"Little Triumphs\"",
+    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
     outgoing: [
       {
         id: "c6->c7",
         to: "c7",
-        label: "Hand Kerman more than 2 evidence pieces",
-      },
-      {
-        id: "c5->f1",
-        to: "e1",
-        label: "Hand Kerman 2 evidence pieces",
       },
     ],
   },
   {
     id: "c7",
     type: "choice",
+    title: "Hand in evidence",
+    description: "Kerman will also ask you to hand in major evidence, which will determine the ending you pursue.\n1. If you want the Debtor ending, make sure you have completed at least 2 of the other side story tasks. When Kerman asks for evidence, hand in 2 pieces, then choose to stop working with him.\n2. If you want the Savior ending, make sure you have completed all of the side story tasks and listened to every tape. After handing Kerman 2 pieces of evidence, hand him the other 6.\n3. If you try to hand Kerman more than 2 pieces of evidence, but have not listened to every tape or obtained the other 6 main evidence pieces, you will be redirected onto the Survivor path.",
+    choices: ["Savior", "Debtor", "Survivor"],
+    outgoing: [
+      {
+        id: "c7->c8",
+        to: "c8",
+        label: "Hand Kerman more than 2 evidence pieces",
+      },
+      {
+        id: "c7->e1",
+        to: "e1",
+        label: "Hand Kerman 2 evidence pieces",
+      },
+    ],
+  },
+  {
+    id: "c8",
+    type: "choice",
     title: "Hand in evidence part 2",
     description: "You have chosen to try for Savior. You must hand over all evidence, otherwise you will be redirected to Survivor",
     choices: ["Savior", "Survivor"],
     outgoing: [
       {
-        id: "c7->c8",
-        to: "c8",
+        id: "c8->c9",
+        to: "c9",
         label: "Hand Kerman all evidence",
       },
       {
-        id: "c7->d1",
+        id: "c8->d1",
         to: "d1",
         label: "Fail to gather all evidence",
       },
     ],
   },
   {
-    id: "c8",
-    type: "regular",
-    title: "Savior",
-    description: "",
+    id: "c9",
+    type: "choice",
+    title: "Fence reaches out",
+    description: "If you have not already, make sure you have Intelligence Center Level 3 built. Fence will then reach out and you must get 4.0 Fence reputation. After this, Fence will give you a task, that depends on if you're in PVP or PVE mode.",
     choices: ["Savior", "Survivor"],
     outgoing: [
       {
-        id: "c8->c9",
-        to: "c9",
+        id: "c9->c10-1",
+        to: "c10-1",
+        label: "I'm in PVP mode",
       },
+      {
+        id: "c9->c10-2",
+        to: "c10-2",
+        label: "I'm in PVE mode",
+      },
+    ],
+  },
+  {
+    id: "c10-1",
+    type: "regular",
+    title: "[PVP] Fence's task",
+    description: "During this task, you must not go below 4.0 Fence reputation. You must go to both Woods and Reserve and take to Co-op extracts without killing any scavs or The Goons. You can lure scavs into the extract with the help of smoke grenades.",
+    choices: ["Savior", "Survivor"],
+    outgoing: [
+      {
+        id: "c10-1->c11",
+        to: "c11",
+      },
+    ],
+  },
+  {
+    id: "c10-2",
+    type: "regular",
+    title: "[PVE] Fence's task",
+    description: "During this task, you must not go below 4.0 Fence reputation. You must go to Interchange and Shoreline and kill 5 PMCs in one raid without killing any scavs.",
+    choices: ["Savior", "Survivor"],
+    outgoing: [
+      {
+        id: "c10-2->c11",
+        to: "c11",
+      },
+    ],
+  },
+  {
+    id: "c11",
+    type: "choice",
+    title: "Complete BTR task line",
+    description: "You must complete the BTR side task line, ending in \"The Price of Independence\". If you reach \"The Price of Independence\" but choose to side with Skier and complete \"Chose Your Friends Wisely\" instead, you will be redirected to the Survivor ending.",
+    choices: ["Savior", "Survivor"],
+    outgoing: [
+      {
+        id: "c11->c12",
+        to: "c12",
+        label: "Complete \"The Price of Independence\"",
+      },
+      {
+        id: "c11->d1",
+        to: "d1",
+        label: "Side with Skier",
+      },
+    ],
+  },
+  {
+    id: "c12",
+    type: "regular",
+    title: "Savior ending",
+    description: "Congratulations, you are locked into the Savior ending! You must build Solar Power in your hideout, then you will get the final craft for the keycard to terminal. Once the keycard is crafted, head to Shoreline between 21:00 and 06:00. Talk to the intercom and swipe your keycard, then approach the terminal gate with your knife out. You can now attempt to escape Tarkov. If you fail the first time, don't worry, you can craft another keycard in your hideout and attempt again until you succeed.",
+    choices: ["Savior"],
+    outgoing: [
     ],
   },
   {
@@ -595,8 +656,8 @@ export const mainNodes: TreeNode[] = [
     choices: ["Debtor"],
     outgoing: [
       {
-        id: "d1->d2",
-        to: "d2",
+        id: "e1->e2",
+        to: "e2",
       },
     ],
   },
@@ -608,8 +669,8 @@ export const mainNodes: TreeNode[] = [
     choices: ["Fallen"],
     outgoing: [
       {
-        id: "d1->d2",
-        to: "d2",
+        id: "f1->f2",
+        to: "f2",
       },
     ],
   },
