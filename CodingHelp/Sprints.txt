@@ -1,0 +1,22 @@
+Week 1: Get back on track
+- Reinstall software
+- Establish a workflow
+- Rescope project
+- Get back to work on project
+- Have a deliverable and buildable app by the end of the week
+
+Week 2:
+- Have a solid idea on how to handle the backend in a scalable way
+- Start backend quest tree development
+- Figure out some answers for some of the harder info to find. 
+  (Some parts of the quest tree aren't written outside the game and are only findable via doing the game. Will need to talk to gamers who have done it)
+   
+Week 3:
+- Continue to implement nodes for the backend
+- Get a UI setup for the choice nodes
+
+Week 4:
+- Fix uncomplete bug on choice node
+- Implement many more nodes
+- (optionaly/ideally) Get to a point where I can test uncomplete tracing
+  for multiple back options and make sure it works successfully
