@@ -690,13 +690,26 @@ export const mainNodes: TreeNode[] = [
   {
     id: "e1",
     type: "regular",
-    title: "Debtor",
-    description: "",
+    title: "Get access Lightkeeper",
+    description: "You have chosen not to work with Kerman. You will get the \"U-Turn\" achievement. Now, make sure you have Intelligence Center 3, and after that, start talking to the traders. Through one of them, you will gain access to \"Network Provider Part 1\". Complete this task line to gain access to Lightkeeper.",
     choices: ["Debtor"],
     outgoing: [
       {
         id: "e1->e2",
         to: "e2",
+      },
+    ],
+  },
+  {
+    id: "e2",
+    type: "regular",
+    title: "",
+    description: "",
+    choices: ["Debtor"],
+    outgoing: [
+      {
+        id: "e2->e3",
+        to: "e3",
       },
     ],
   },
