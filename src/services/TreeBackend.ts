@@ -516,7 +516,7 @@ export const mainNodes: TreeNode[] = [
     type: "regular",
     title: "Hand in minor evidence",
     description: "Kerman will now ask for dirt on Terragroup. To start, there are 36 pieces of minor evidence you can collect from the side story tasks. If you turn all of them in, you will get an achievement called \"Little Triumphs\"",
-    choices: ["Savior", "Fallen", "Debtor", "Survivor"],
+    choices: ["Savior", "Debtor", "Survivor"],
     outgoing: [
       {
         id: "c6->c7",
@@ -703,8 +703,8 @@ export const mainNodes: TreeNode[] = [
   {
     id: "e2",
     type: "regular",
-    title: "",
-    description: "",
+    title: "Obtain documents",
+    description: "Visit Lightkeeper and he will give you a task to obtain 5 topographical reconaissance documents. You will find these on Customs, Factory, Woods, Interchange, and Lighthouse. Once you have obtained all 5, you can craft a special flash drive, then bring it to Lightkeeper.",
     choices: ["Debtor"],
     outgoing: [
       {
@@ -714,17 +714,115 @@ export const mainNodes: TreeNode[] = [
     ],
   },
   {
-    id: "f1",
+    id: "e3",
     type: "regular",
-    title: "Fallen",
-    description: "",
+    title: "Kill PMCs",
+    description: "After delivering the flash drive, Lightkeeper will ask us to kill 30 PMCs on Woods and bring him 100 dog tags. You can bring the 100 dog tags in a dogtag case in your secure container.",
+    choices: ["Debtor"],
+    outgoing: [
+      {
+        id: "e3->e4",
+        to: "e4",
+      },
+    ],
+  },
+  {
+    id: "e4",
+    type: "regular",
+    title: "Collect Amulets",
+    description: "Next, Lightkeeper will as you to collect 6 amulets, one from each marked room outside of Lighthouse (three on Reserve, two on Streets of Tarkov, and one on Customs). After you collect them, you must bring them to the marked room on Lighthouse and plant them. After that, talk to Lightkeeper and he will give you a keycard to enter terminal (it goes in your special slot).",
+    choices: ["Debtor"],
+    outgoing: [
+      {
+        id: "e4->e5",
+        to: "e5",
+      },
+    ],
+  },
+  {
+    id: "e5",
+    type: "regular",
+    title: "Debtor Ending",
+    description: "Lightkeeper has gotten you this far, now you must escape. Head to Shoreline between 21:00 and 06:00. Talk to the intercom and swipe your keycard from Lightkeeper, then approach the terminal gate with your knife out. You can now attempt to escape Tarkov. If you fail the first time, don't worry, you can obatain another keycard from Lightkeeper as a barter for one Blue Terragroup Documents as many times as you need.",
+    choices: ["Debtor"],
+  },
+  {
+    id: "f1",
+    type: "choice",
+    title: "Talk to Prapor",
+    description: "You have chosen not to help Kerman and are now locked on the Fallen ending. Now, you must talk to Prapor. If you kept the case for yourself earlier (after retrieving it from the fallen plane and talking to Prapor), your path will be harder. However, if you handed the case to Prapor earlier, you path will be easier. You will also need Solar Power in your hideout for this ending, which can take a bit to get, so I suggest working on that sooner than later.",
     choices: ["Fallen"],
     outgoing: [
       {
+        id: "f1->f1-2",
+        to: "f1-2",
+        label:"I kept the case for myself"
+      },
+      {
         id: "f1->f2",
+        to: "f2",
+        label:"I handed the case over to Prapor"
+      },
+    ],
+  },
+  {
+    id: "f1-2",
+    type: "regular",
+    title: "Prapor's tasks",
+    description: "Prapor will ask you to complete three tasks. First, you must hand in 40 full durability repair kits, either armor or weapon. Second, you must hand in 50 military or advanced electronics. Third, you must hand in a secure container (Theta, Epsilon, or Kappa).",
+    choices: ["Fallen"],
+    outgoing: [
+      {
+        id: "f1-2->f2",
         to: "f2",
       },
     ],
+  },
+  {
+    id: "f2",
+    type: "regular",
+    title: "Obtain dangerous case",
+    description: "Prapor is happy with you, and now he is sending you to obtain a dangerous weapon. You must visit Reserve, grab the case, and deliver it to Prapor.",
+    choices: ["Fallen"],
+    outgoing: [
+      {
+        id: "f2->f3",
+        to: "f3",
+      },
+    ],
+  },
+  {
+    id: "f3",
+    type: "regular",
+    title: "Prapor wants money",
+    description: "After delivering the case to Prapor, he will ask you to pay him 1 million USD. After completing this, you will get the \"Will it Blow\" achievement",
+    choices: ["Fallen"],
+    outgoing: [
+      {
+        id: "f3->f4",
+        to: "f4",
+      },
+    ],
+  },
+  {
+    id: "f4",
+    type: "regular",
+    title: "Keycard craft",
+    description: "Prapor will now give you a USB stick with his hash code on it. At this point, to proceed, you must have Solar Power built in your hideout. Once that's done, you can craft the final keycard to escape.",
+    choices: ["Fallen"],
+    outgoing: [
+      {
+        id: "f4->f5",
+        to: "f5",
+      },
+    ],
+  },
+  {
+    id: "f5",
+    type: "regular",
+    title: "Fallen Ending",
+    description: "Prapor has gotten you this far, now you must escape. Head to Shoreline between 21:00 and 06:00. Talk to the intercom and swipe your crafted keycard, then approach the terminal gate with your knife out. You can now attempt to escape Tarkov. If you fail the first time, don't worry, you can obatain another keycard by crafting it with a new Blank RFID Card",
+    choices: ["Fallen"],
   },
 ];
 
