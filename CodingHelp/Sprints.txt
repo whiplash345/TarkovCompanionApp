@@ -20,3 +20,10 @@ Week 4:
 - Implement many more nodes
 - (optionaly/ideally) Get to a point where I can test uncomplete tracing
   for multiple back options and make sure it works successfully
+
+Week 5:
+- Add many more nodes. Hopefully I'll be close to complete with the main story line nodes by the end of this week.
+
+Week 6:
+- Finish main story line nodes.
+- Start on side story line UI and possibly nodes
