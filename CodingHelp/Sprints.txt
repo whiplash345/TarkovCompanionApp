@@ -27,3 +27,8 @@ Week 5:
 Week 6:
 - Finish main story line nodes.
 - Start on side story line UI and possibly nodes
+
+Week 7:
+- Finalize side story line UI
+- Complete all side story chapter nodes
+- (optional) Start work on AI chat bot UI
