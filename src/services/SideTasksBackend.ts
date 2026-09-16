@@ -72,7 +72,7 @@ export const sideTaskDefinitions: SideTaskDefinition[] = [
         id: "a2",
         type: "regular",
         title: "Find info on Kruglov",
-        description: "First, ensure you have Dorm room 110 key (blue handle). The on Customs, go into the two story dorms and make your way to the room. Below the room number on the wall, there will be a letter you need to pick up (read it and every other note you pick up in raid to avoid loosing progress if you die). Next, enter the locked room and pick up the letter on the night stand. Optionally, you also pick up a note in the kitchen next to 110 on the wall (collecting all optional notes leads to an achievement).",
+        description: "First, ensure you have Dorm room 110 key (blue handle). The on Customs, go into the two story dorms and make your way to the room. Below the room number on the wall, there will be a letter you need to pick up. Next, enter the locked room and pick up the letter on the night stand. Optionally, you also pick up a note in the kitchen next to 110 on the wall.",
         outgoing: [
           { id: "a2->a3", 
             to: "a3" },
@@ -130,21 +130,122 @@ export const sideTaskDefinitions: SideTaskDefinition[] = [
     id: "batya",
     name: "Batya",
     icon: require("../../assets/Batya_Icon.webp"),
-    tree: new Tree("batya", "batya-intro", [
+    tree: new Tree("batya", "b1", [
       {
-        id: "batya-intro",
+        id: "b1",
         type: "regular",
-        title: "Batya: Begin the task",
-        description: "Add the opening objective and instructions for Batya here.",
-        outgoing: [{ id: "batya-intro->batya-finale", to: "batya-finale" }],
+        title: "How to initiate the quest",
+        description: "Visit one of four locations:\n1. On Customs, in the second floor of fortress in the center of the map, walk up to the mattress underneath the writing \"жопа\" on the wall.\n2. On Reserve, go into the radome at the top of the radar station.\n3. On Shoreline, visit the bunker on the north end of the map.\n4. On Woods, find the mattresses on top of the big rock in the southern half of the USEC camp.\n\nIn the same raid, it may be useful to complete the next step.",
+        outgoing: [
+          { id: "b1->b2", 
+            to: "b2" }
+        ],
       },
       {
-        id: "batya-finale",
+        id: "b2",
         type: "regular",
-        title: "Batya: Complete the task",
-        description: "Add the final objective and instructions for Batya here.",
-        outgoing: [],
-        isEnd: true,
+        title: "Find a Bogatyrs patch",
+        description: "Visit one of four locations:\n1. On Customs, near the radio tower in the south west of the map, enter a white cabin with a couch, and the patch is underneath the pillow.\n2. On Woods, at Prapor's lost convoy south of the scav bunker the patch is against the leg of a dead body.\n3.On Reserve, on the upper roof of the king/queen building(not radar station), the patch will be on a cardboard box.\n4. On Lighthouse, on top of the southmost mountain overlooking the lighthouse, there is a small military camp. The patch is on a rolled up sleeping bag next to a sleeping tent.",
+        outgoing: [
+          { id: "b2->b3", 
+            to: "b3" }
+        ],
+      },
+      {
+        id: "b3",
+        type: "regular",
+        title: "Talk to Jaeger",
+        description: "After finding the patch, you must talk to Jaeger, and he will direct you to the Ryabina outpost, which is in between the USEC camp and sniper mountain. You will have to pick up a note and and Strelets' amulet from here.",
+        outgoing: [
+          { id: "b3->b4", 
+            to: "b4" }
+        ],
+      },
+      {
+        id: "b4",
+        type: "regular",
+        title: "Locate the Carousel outpost",
+        description: "The next two outposts you need to find are on Interchange, the first near the main entrance of Idea. I suggest bringing a cassete player with you. Here you will find 4 notes, a postcard, an audio tape (listen to this in raid, or after raid if you forget), and Voevoda's audio recorder. In the same raid, you can also do the next step.",
+        outgoing: [
+          { id: "b4->b5", 
+            to: "b5" }
+        ],
+      },
+      {
+        id: "b5",
+        type: "regular",
+        title: "Locate the Gnezdo outpost",
+        description: "The other outpost on Interchange is in the woods behind the mall, to the east. I also suggest having a cassete player with you for this. Here you will find 5 notes and another audio tape, which I suggest you listen to in raid, or after.",
+        outgoing: [
+          { id: "b5->b6", 
+            to: "b6" }
+        ],
+      },
+      {
+        id: "b6",
+        type: "regular",
+        title: "Locate the ambush spot",
+        description: "Head to Woods, and on an open hill to the north east of ZB-16, you will find Moreman's grave. Here you must grab a note, Moreman's dogtag, and Moreman's phone.",
+        outgoing: [
+          { id: "b6->b7", 
+            to: "b7" }
+        ],
+      },
+      {
+        id: "b7",
+        type: "regular",
+        title: "Craft Moreman's audio tapes",
+        description: "With Moreman's phone, in Workbench 1 you need to craft 2 audio tapes, then listen to them. Next, enter your hideout and walk up to the intelligence center's radio to contact Voeveda. Enter the frequency \"35.70\" and then the code \"27.893.2000\".",
+        outgoing: [
+          { id: "b7->b8", 
+            to: "b8" }
+        ],
+      },
+      {
+        id: "b8",
+        type: "regular",
+        title: "Gain access to Lightkeeper",
+        description: "If you haven't already, you must gain access to Lightkeeper. Then bring him the five related quest items in raid, then extract. If you die before handing these to Lightkeeper, you must get them again from where you did earlier. ",
+        outgoing: [
+          { id: "b8->b9", 
+            to: "b9" }
+        ],
+      },
+      {
+        id: "b9",
+        type: "regular",
+        title: "Wait for Voeveda to reach out",
+        description: "After 6-12 hours from delivering the items to Lightkeeper, Voeveda will reach back out. You can talk to him at the intelligence center with the same frequency as before \"35.70\" and code \"27.893.2000\". He will require you to reach certain skill levels, then eliminate 4 PMCs and 15 targets without dying.",
+        outgoing: [
+          { id: "b9->b10", 
+            to: "b10" }
+        ],
+      },
+      {
+        id: "b10",
+        type: "regular",
+        title: "Contact Voeveda again",
+        description: "After completing Voeveda's tasks, contact him again (frequency \"35.70\" and code \"27.893.2000\"). You will be directed to the BEAR camp on the southern most mountain on Lighthouse overlooking the lighthouse. On a table there, you need to grab a note, then extract.",
+        outgoing: [
+          { id: "b10->b11", 
+            to: "b11" }
+        ],
+      },
+      {
+        id: "b11",
+        type: "regular",
+        title: "Interrogate Prapor",
+        description: "First, visit Prapor in the trader menu. He is not helpful, and your objective will update. \n\n First, Head to Shoreline and go to scav island. In the back of the house on the island, there is a cultist circle, and in it a photo you need to grab.\n\nSecond, you must go to either Woods or Customs for the next note(if you choose Customs, you will need dorms 314 marked key). On Woods, the note is next to some candles near the cultist circle behind the Sawmill. On Customs, the note is on the wall of 314 marked room in the third floor of the three story dorms.",
+        outgoing: [
+          { id: "b11->b12", 
+            to: "b12" }
+        ],
+      },
+      {
+        id: "b12",
+        type: "regular",
+        title: "Finishing the quest line",
+        description: "Finally, we must visit Lightkeeper, then leave. In a separate raid, return the Lightkeeper's lighthouse and pick up the final paper off of a red box outside Lightkeeper's room, then extract.",
       },
     ]),
   },
@@ -152,22 +253,64 @@ export const sideTaskDefinitions: SideTaskDefinition[] = [
     id: "blue-fire",
     name: "Blue Fire",
     icon: require("../../assets/Blue_Fire_Icon.webp"),
-    tree: new Tree("blue-fire", "blue-fire-intro", [
+    tree: new Tree("blue-fire", "c1", [
       {
-        id: "blue-fire-intro",
+        id: "c1",
         type: "regular",
-        title: "Blue Fire: Begin the task",
-        description: "Add the opening objective and instructions for Blue Fire here.",
-        outgoing: [{ id: "blue-fire-intro->blue-fire-finale", to: "blue-fire-finale" }],
+        title: "How to initiate the quest",
+        description: "Visit one of three locations: \n1. On Woods, inside the emercom base, there is a green shipping container with lots of shelves. On the side of one of the shelves, pick of the paper.\n2. On Interchange, on the highway to the west (main entrance) of the mall, there is a tent. Pick up the note on the side. There is also another tent with a note near the \"Path to River\" extract deeper west in the woods. Finally there is a third note on the wall outside of the locked Emercom medical unit, next to the door.\n3. In Labyrinth, on a table in the prototype weapon area, you can also pick up the note",
+        outgoing: [
+          { id: "c1->c2",
+            to: "c2" }
+        ],
       },
       {
-        id: "blue-fire-finale",
+        id: "c2",
         type: "regular",
-        title: "Blue Fire: Complete the task",
-        description: "Add the final objective and instructions for Blue Fire here.",
-        outgoing: [],
-        isEnd: true,
+        title: "Talk to Mechanic",
+        description: "Visit mechanic, then he will direct you to Streets of Tarkov. You will need one of two keys, either \"Car dealership closer section key(LexOs)\" or \"Mysterious room marked key(Chek. 13)\". If you go to the dealership, you can find the device in a green container on a table in the locked room. If you go to the marked room, you can find the device in the corner of the locked room in a flower pot.",
+        outgoing: [
+          { id: "c2->c3",
+            to: "c3" }
+        ],
       },
+      {
+        id: "c3",
+        type: "regular",
+        title: "Talk to Mechanic again",
+        description: "Visit Mechanic and hand him the device fragment. Next, you will have to go to Labs and plant a Local network hacking device in the server room. If you have already done this in the Boreas story, this objective will auto-complete and you can move on.",
+        outgoing: [
+          { id: "c3->c4",
+            to: "c4" }
+        ],
+      },
+      {
+        id: "c4",
+        type: "regular",
+        title: "Talk to Mechanic once more",
+        description: "Visit Mechanic again and he will ask for the device fragment. Currently, this decision has no major story impact. If you hand him the device, Mechanic will pay you 1.5 million rubles. If you keep it, you get the achievement \"Better Served\".\n\nNext, you will need to head to Ground Zero(must be level 21+), Lighthouse, or Labs to find a note. On Ground Zero, you must grab the science office key off the dead scientist. Then, head upstairs and the note will be on a desk in the locked room. If you choose to go Lighthouse, the note can be found in the chalet with the blue roof set on a shelf next to the liquor storage room. If you choose to go Labs, you can find the note in the dark office room on a desk.",
+        outgoing: [
+          { id: "c4->c5",
+            to: "c5" }
+        ],
+      },
+      {
+        id: "c5",
+        type: "regular",
+        title: "Invensitage the post office",
+        description: "Head to Streets of Tarkov and bring a cassete player. Visit the post office and you will find 3 cassete tapes, which you will want to listen to in raid, or after. If you listen to the tapes in raid, it may be useful to do the next step the same raid.",
+        outgoing: [
+          { id: "c5->c6",
+            to: "c6" }
+        ],
+      },
+      {
+        id: "c6",
+        type: "regular",
+        title: "Finishing the quest line",
+        description: "Out front of the post offuce, there is a blue van. On the road next to one of the wheels, you will find the key to the van. Use this key to open up the trunk and grab a note.",
+      },
+      
     ]),
   },
   {
