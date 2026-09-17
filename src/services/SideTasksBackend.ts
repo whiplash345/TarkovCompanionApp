@@ -317,21 +317,150 @@ export const sideTaskDefinitions: SideTaskDefinition[] = [
     id: "boreas",
     name: "Boreas",
     icon: require("../../assets/Boreas_Icon.webp"),
-    tree: new Tree("boreas", "boreas-intro", [
+    tree: new Tree("boreas", "d1", [
       {
-        id: "boreas-intro",
+        id: "d1",
         type: "regular",
-        title: "Boreas: Begin the task",
-        description: "Add the opening objective and instructions for Boreas here.",
-        outgoing: [{ id: "boreas-intro->boreas-finale", to: "boreas-finale" }],
+        title: "How to initiate the quest",
+        description: "You can start this quest one of threeways.\n\n1. The easiest way, obtain a paradigm poster. These can be found in many different places on Ground Zero, Customs, Lighthouse, and Factory. You can also buy one from the flea market.\n\n2. If you have Intelligence center 3, a message will appear on the radio. Read it to start the quest.\n\n3. If you are going through the Savior ending and are talking with Mr. Kerman, at the stage where he asks you to hand over compromising evidence on Terragroup, you can ask him if there are any leads and he will send you to talk to Mechanic and the quest will begin",
+        outgoing: [
+          { id: "d1->d2",
+            to: "d2" }
+        ],
       },
       {
-        id: "boreas-finale",
+        id: "d2",
         type: "regular",
-        title: "Boreas: Complete the task",
-        description: "Add the final objective and instructions for Boreas here.",
-        outgoing: [],
-        isEnd: true,
+        title: "Fix the radio tower",
+        description: "First step, talk to Mechanic and he will direct you to Woods to repair a radion tower. You need to bring a toolset with you to do this.",
+        outgoing: [
+          { id: "d2->d3",
+            to: "d3" }
+        ],
+      },
+      {
+        id: "d3",
+        type: "regular",
+        title: "Obtain the Paradigm shipping directive",
+        description: "Visit Mechanic again, and he will direct you to Lighthouse. In a warehouse in the train station behind water treatment, you will find a table with the needed document on it.",
+        outgoing: [
+          { id: "d3->d4",
+            to: "d4" }
+        ],
+      },
+      {
+        id: "d4",
+        type: "choice",
+        title: "Find transport to the icebreaker",
+        description: "Visit Mechanic again, then he will direct you to visit Prapor and the BTR driver to find a way to and from the icebreaker. It doesn't matter which you do first, but we'll start with the BTR driver (the transport to the icebreaker) for this guide. If you completed the BTR task line with the good ending \"The Price of Independence\", talk to the BTR driver (On Woods or Streets of Tarkov) and he will give you immediate access to the Icebreaker. If you completed the BTR task line with the bad ending \"Choose your friends wisely\", you will have to do some tasks for the BTR driver. If you did not complete either ending for the BTR driver at this point, you will have a different task you will have to do for him.",
+        outgoing: [
+          { id: "d4->d5",
+            to: "d5",
+            label:"Completed the good ending" },
+          { id: "d4->d4-2",
+            to: "d4-2",
+            label:"Completed the bad ending" },
+          { id: "d4->d4-3",
+            to: "d4-3",
+            label:"Didn't complete an ending" },
+        ],
+      },
+      {
+        id: "d4-2",
+        type: "regular",
+        title: "Help to BTR driver",
+        description: "The BTR driver will ask to deliver 200 rounds of 7.62x54R BT ammo. After that, you will need to destroy some documents for him on Customs. They are located in a trench between ZB-013 and Lab/Crackhouse. After finding the documents, find the closest burning barrel and burn them. Finally, visit one of the smugglers bases (either on Shoreline or Interchange) and eliminate 15 targets. Then, visit the BTR driver again and you will unlock the transport to icebreaker.",
+        outgoing: [
+          { id: "d4-2->d5",
+            to: "d5" }
+        ],
+      },
+      {
+        id: "d4-3",
+        type: "regular",
+        title: "Help the BTR driver",
+        description: "The BTR driver will ask you to eliminate 10 targets in a smugglers base, either on Shoreline or Interchange. After completing this, visit him again and he he unlock the transport to the Icebreaker.",
+        outgoing: [
+          { id: "d4-3->d5",
+            to: "d5" }
+        ],
+      },
+      {
+        id: "d5",
+        type: "choice",
+        title: "Find transport from the icebreaker",
+        description: "Now that you have found a way to the icebreaker, you need to find a way to extract from it. First, visit Prapor. If you have already found the case from Falling Skies and handed it to Prapor, he immediately sends you to get some helicopter oil. If you have found case but decided to keep it for yourself, Prapor needs you to find some items for him before sending you to find helicopter oil. If you haven't reached the step where you find the case in Falling Skies, Prapor will give you some tasks before anything else.",
+        outgoing: [
+          { id: "d5->d6",
+            to: "d6",
+            label:"Handed Prapor the case" },
+          { id: "d5->d5-2",
+            to: "d5-2",
+            label:"Kept the case for yourself" },
+          { id: "d5->d5-3",
+            to: "d5-3",
+            label:"Haven't found the case" },
+        ],
+      },
+      {
+        id: "d5-2",
+        type: "regular",
+        title: "Find power filters",
+        description: "Find 3 Military power filters with the FIR(Found in Raid) status, and hand them over to Prapor.",
+        outgoing: [
+          { id: "d5-2->d6",
+            to: "d6" }
+        ],
+      },
+      {
+        id: "d5-3",
+        type: "regular",
+        title: "Complete Prapor's tasks",
+        description: "Head to Reserve and kill 30 targets. Then, head the the transit to Woods from Reserve and launch a yellow flare. These can be completed in the same raid.",
+        outgoing: [
+          { id: "d5-3->d6",
+            to: "d6" }
+        ],
+      },
+      {
+        id: "d6",
+        type: "regular",
+        title: "Helicopter oil",
+        description: "",
+        outgoing: [
+          { id: "d2->d3",
+            to: "d3" }
+        ],
+      },
+      {
+        id: "d2",
+        type: "regular",
+        title: "",
+        description: "",
+        outgoing: [
+          { id: "d2->d3",
+            to: "d3" }
+        ],
+      },
+      {
+        id: "d2",
+        type: "regular",
+        title: "",
+        description: "",
+        outgoing: [
+          { id: "d2->d3",
+            to: "d3" }
+        ],
+      },
+      {
+        id: "d2",
+        type: "regular",
+        title: "",
+        description: "",
+        outgoing: [
+          { id: "d2->d3",
+            to: "d3" }
+        ],
       },
     ]),
   },
