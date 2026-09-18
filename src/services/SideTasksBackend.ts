@@ -426,41 +426,87 @@ export const sideTaskDefinitions: SideTaskDefinition[] = [
         id: "d6",
         type: "regular",
         title: "Helicopter oil",
-        description: "",
+        description: "You must find the helicopter oil on Reserve. It can be found in one of 6 different locations.",
         outgoing: [
-          { id: "d2->d3",
-            to: "d3" }
+          { id: "d6->d7",
+            to: "d7" }
         ],
       },
       {
-        id: "d2",
+        id: "d7",
         type: "regular",
-        title: "",
-        description: "",
+        title: "Travel to icebreaker",
+        description: "Make sure to bring a good kit, because icebreaker is quite a fight. Obtain a Sudak Tudak marine repair kit and bring 2,400 Euros, then board the hovercraft at the pier on Shoreline or Lighthouse and you will transit to icebreaker.\n\nNext, make your way to the room with the scientist and iteract with the intercom on the wall.\n\nAfter that, find the dead engineer in the operating room and grab the keycard that spawns next to him. Make your way to the locked door to the engine room, and use the keycard to enter it. Navigate and fight your way through the engine room and more of the ship, past the extraction zone(helipad), until you reach a door with a chain. Interact with the door to update your task, then turn around and make your way back to the helipad. Launch a green flare on the helipad the call the helicopter, then extract.",
         outgoing: [
-          { id: "d2->d3",
-            to: "d3" }
+          { id: "d7->d8",
+            to: "d8" }
         ],
       },
       {
-        id: "d2",
+        id: "d8",
         type: "regular",
-        title: "",
-        description: "",
+        title: "Breach the icebreaker superstructure",
+        description: "Speak to mechanic, then Prapor. You will now have the ability to buy a SZ-1 explosive charge to use on the chained door.\n\nHead back to icebreaker and follow the same pathing to get back to the door, then breach it with the charge (walk away after planting the charge, otherwise you will die). Open the door and you will have to kill Wegde and his squad. Once done, make your way up to level 5 of the ship and you will find a code locked door and your quest will update.\n\nHead back to the scientist in the room and interact with the intercom, and he will tell you he only had part of the door code \"312\". Then, extract.",
         outgoing: [
-          { id: "d2->d3",
-            to: "d3" }
+          { id: "d8->d9",
+            to: "d9" }
         ],
       },
       {
-        id: "d2",
+        id: "d9",
+        type: "regular",
+        title: "Speak with Mechanic",
+        description: "Speak with Mechanic to get the second part of the door code \"220\" and update your task. Mechanic will first ask you to install a Local network hacking device in the Labs server room. If you have already completed this step in the Blue Fire quest line, it will be skipped here and Mechanic will give you the code immediately.",
+        outgoing: [
+          { id: "d0->d10",
+            to: "d10" }
+        ],
+      },
+      {
+        id: "d10",
+        type: "regular",
+        title: "Return to the icebreaker",
+        description: "Head back to the icebreaker once more and progress all to the area with Wedge. Kill his crew, then find the gas torch in one of three spawns in that area. After, head back to the locked door on level 5, then enter the code you found \"312220\". Make your way up to the roof of the icrebreaker and you will find a hatch, which you can open with the gas torch. Once in, locate the captains body and grab the C-1 keycard next to him. Also loot any Satellite Communication Modules(you will need 3 found in raid), Memento Server RAM(you will need 4 FIR), and Gigachad processors(you will need 2 FIR) you find here for further down the quest line. Then, break through the door in the back and make your way to the locked C-1 room(on level 7. The keycard was found on level 9). Open it, and loot 3 C-1 drives. Then, go back to the scientist and inform him about the captains death. This can all be done in one raid, or over multiple raids.",
+        outgoing: [
+          { id: "d10->d11",
+            to: "d11" }
+        ],
+      },
+      {
+        id: "d11",
+        type: "regular",
+        title: "Obtain icebreaker archive data",
+        description: "Hand in the 3 C-1 drives to Mechanic(note, the quests \"A Wedge Between Us\", \"Fresh Stock\", \"Oil Change\", and \"War Never Changed\" will become unavailable after handing them in). Next, you will need to hand over the tech items mentioned earlier (3 Ultralink satellite communication modules, 4 Momento server ram, and 2 Gigachad processors) which can only be found on icebreaker. After handing these in, you will receieve the icebreaker archive data from Mechanic, make sure to read it in your handbook.",
+        outgoing: [
+          { id: "d11->d12",
+            to: "d12" }
+        ],
+      },
+      {
+        id: "d12",
+        type: "regular",
+        title: "Help the BTR driver",
+        description: "Visit the BTR driver for help evacuating the scientist on the icebreaker and he will give you a new quest line. First, you will need to kill 30 rouges. Second, you will need to mark the transit to Lighthouse from Woods, and the transit to Woods from Lighthouse. Third, you will need to hand over 4 Moonshine, 4 Croutons (Rye or Emelya rye works), 4 Vodka, and 2 Sausage(none need to be FIR) to the BTR driver. Finallaly, extract after completing the third task, then return to the BTR driver in a separate raid to complete the task line. In between each of these tasks, you must speak with the BTR driver. After completing all of these, you can now access icebreaker directly from the map.",
+        outgoing: [
+          { id: "d13->d13",
+            to: "d13" }
+        ],
+      },
+      {
+        id: "d13",
         type: "regular",
         title: "",
-        description: "",
+        description: "In a new raid, visit the BTR driver again and he will give you a set of new tasks. You must hand over 5 respirators of any kind, 2 class 5 or 6 ballistic plates, and a kirasa body armor to the BTR driver. You must also kill 20 targets on icebreaker. After that, return to the scientist on the icebreaker, then extract.",
         outgoing: [
-          { id: "d2->d3",
-            to: "d3" }
+          { id: "d13->d14",
+            to: "d14" }
         ],
+      },
+      {
+        id: "d14",
+        type: "regular",
+        title: "Finishing the quest line",
+        description: "Visit the BTR one last time to see how the evacuation went. You will learn the scientist ran off during the evacuation attempt, but he left behind a Keycard which the BTR driver gives you \"C-3\". This is a one use keycard to the room the scientist was in. In it, you will find 4 LedX units and a cassete tape.",
       },
     ]),
   },
