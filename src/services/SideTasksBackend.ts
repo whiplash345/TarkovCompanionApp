@@ -495,7 +495,7 @@ export const sideTaskDefinitions: SideTaskDefinition[] = [
       {
         id: "d13",
         type: "regular",
-        title: "",
+        title: "Help the scientist get out",
         description: "In a new raid, visit the BTR driver again and he will give you a set of new tasks. You must hand over 5 respirators of any kind, 2 class 5 or 6 ballistic plates, and a kirasa body armor to the BTR driver. You must also kill 20 targets on icebreaker. After that, return to the scientist on the icebreaker, then extract.",
         outgoing: [
           { id: "d13->d14",
@@ -514,21 +514,46 @@ export const sideTaskDefinitions: SideTaskDefinition[] = [
     id: "the-labyrinth",
     name: "The Labyrinth",
     icon: require("../../assets/The_Labyrinth_Chapter_Icon.webp"),
-    tree: new Tree("the-labyrinth", "the-labyrinth-intro", [
+    tree: new Tree("the-labyrinth", "e1", [
       {
-        id: "the-labyrinth-intro",
+        id: "e1",
         type: "regular",
-        title: "The Labyrinth: Begin the chapter",
-        description: "Add the opening objective and instructions for The Labyrinth here.",
-        outgoing: [{ id: "the-labyrinth-intro->the-labyrinth-finale", to: "the-labyrinth-finale" }],
+        title: "How to initiate the quest",
+        description: "Find the Knossos key, open up the door in the basement of Shoreline, then walk up to the transit door and your quest line should begin",
+        outgoing: [
+          { id: "e1->e2",
+            to: "e2" }
+        ],
       },
       {
-        id: "the-labyrinth-finale",
+        id: "e2",
         type: "regular",
-        title: "The Labyrinth: Complete the chapter",
-        description: "Add the final objective and instructions for The Labyrinth here.",
-        outgoing: [],
-        isEnd: true,
+        title: "Speak to Jaeger",
+        description: "Visit Jaeger to ask him about the Labyrinth. Then, wait 12-24 hours for him to gather info and visit him again. You will recieve 2 Labrys access cards in the mail(needed to transit) and unlock a barter for more if needed.",
+        outgoing: [
+          { id: "e2->e3",
+            to: "e3" }
+        ],
+      },
+      {
+        id: "e3",
+        type: "regular",
+        title: "Enter the Labyrinth",
+        description: "Head to Shoreline(make sure to bring a cassete player) and use the transit to Labyrinth. Once inside the Labyrinth, clear all enemies off the map. It will be very difficuly to complete the next objectives otherwise. Then, you will need to find 7 documents, 1 key, and one audio tape inside the key room. Make sure to listen to the audio tape when you find it. Finally, extract.",
+        outgoing: [
+          { id: "e3->e4",
+            to: "e4" }
+        ],
+      },
+      {
+        id: "e4",
+        type: "regular",
+        title: "Finishing the quest line",
+        description: "Talk to Jaeger again and hand him the cassete tape you found. Next, you will need to head to Shoreline to find the final documents that a scientist flushed before you could get them. Head to the pier drainage pipe and they will sitting right outside it. Grab them, and you will complete the chapter.",
+        outgoing: [
+          { id: "e4->e5",
+            to: "e5" }
+        ],
       },
     ]),
   },
