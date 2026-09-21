@@ -561,22 +561,93 @@ export const sideTaskDefinitions: SideTaskDefinition[] = [
     id: "the-unheard",
     name: "The Unheard",
     icon: require("../../assets/The_Unheard_Icon.webp"),
-    tree: new Tree("the-unheard", "the-unheard-intro", [
+    tree: new Tree("the-unheard", "f1", [
       {
-        id: "the-unheard-intro",
+        id: "f1",
         type: "regular",
-        title: "The Unheard: Begin the task",
-        description: "Add the opening objective and instructions for The Unheard here.",
-        outgoing: [{ id: "the-unheard-intro->the-unheard-finale", to: "the-unheard-finale" }],
+        title: "How to initiate the quest",
+        description: "Head to either Ground Zero or Streets of Tarkov to pick up a note.\n\nOn Ground Zero, the note can be found in the Terragroup building with the dead scientist, in the locked science office room. You can find the science office key on the dead scientist, then head upstairs to the doors marked with the number 4, and unlock it. The note can be found on one of the desks.\n\nOn Streets, the note can be found in one of two places in the northern part of the map. On the east side of Primorsky Ave.(the main street dividing the east and west) in the office building with the outdoor spiral stairs, you can find the note on top of a small cabinet. On the west side of the street in the security building, then inside the surveillence room, you can find the note on a desk.",
+        outgoing: [
+          { id: "f1->f2",
+            to: "f2" }
+        ],
       },
       {
-        id: "the-unheard-finale",
+        id: "f2",
         type: "regular",
-        title: "The Unheard: Complete the task",
-        description: "Add the final objective and instructions for The Unheard here.",
-        outgoing: [],
-        isEnd: true,
+        title: "Find documents on Labs",
+        description: "The note you found directs you to Laboratory, where you need to find two more documents. The first document you can find in the makeshift medical room on the main floor, underneath the dark offices. The second document you can find in the dark office closer to blue keycard room, next to a fax machine. Then, extract.",
+        outgoing: [
+          { id: "f2->f3",
+            to: "f3" }
+        ],
       },
+      {
+        id: "f3",
+        type: "regular",
+        title: "Find document on Factory",
+        description: "Next you head to Factory. In the medical area, on top of a yellow barrel near a larger blue barrel, you will find the document you need. Then, extract.",
+        outgoing: [
+          { id: "f3->f4",
+            to: "f4" }
+        ],
+      },
+      {
+        id: "f4",
+        type: "regular",
+        title: "Find hard drive on Streets",
+        description: "Next you head to Streets. In a G-Wagon near Lexos, at the intersection of Primorsky Ave and Verhnyaya St, you will find the hard drive in between the front seats. Grab it, then extract.",
+        outgoing: [
+          { id: "f4->f5",
+            to: "f5" }
+        ],
+      },
+      {
+        id: "f5",
+        type: "regular",
+        title: "Decrypt the hard drive",
+        description: "Once you extract with the drive, a new craft will be available inside intelligence center level 1 to decrypt it which will take 12 hours. Once finished, you can read the contents in your handbook, which will lead you to a locked room in Factory. You need a Terragroup storage room keycard to access it, which only spawns on cultists. Once you have the keycard, head to the room in the cellars of Factory and pick up two notes, then extract.",
+        outgoing: [
+          { id: "f5->f6",
+            to: "f6" }
+        ],
+      },
+      {
+        id: "f6",
+        type: "regular",
+        title: "Find tapes on Labs",
+        description: "Your quest now leads to to Labs once more. I suggest you bring a cassete player with you to listen to them in raid.\n\nYou will need to find one of two whiteboards, it doesn't matter which. One is in the dark office closer to blue keycard room. The other is in the office near parking button and the new black keycard safe room.\n\nOn top of finding a whiteboard, you need to find two cassete tapes. In the lecture room underneath the kitchen, can can find one on the floor, and another on a desk near a computer. Finally, extract.",
+        outgoing: [
+          { id: "f6->f7",
+            to: "f7" }
+        ],
+      },
+      {
+        id: "f7",
+        type: "regular",
+        title: "Find more info on Shoreline",
+        description: "You now have to head to Shoreline, specifically resort east wing room 305(you do not need a key to enter). Here you need to find a thumb drive in a laptop, a fragment of a note, and finally a key on the nightstand(this is guarenteed to spawn here every raid). Optionally, you can grab the guard post note from the guard desk on the first floor of west wing, near the enterence.",
+        outgoing: [
+          { id: "f7->f8",
+            to: "f8" }
+        ],
+      },
+      {
+        id: "f8",
+        type: "regular",
+        title: "Decrypt the flash drive",
+        description: "In intelligence center level 1, you now have a craft to decrypt the flash drive you found. Once done, head to Mechanic to ask for help with further decryption. Mechanic mentions a friend(Elektronik aka Mr. Kerman) who can help, but requires 5 million rubles. After paying, you need to wait for Mr. Kerman to reach out. If you have contacted Mr. Kerman before, this should take about an hour. If you have not, wait 6-12 hours, then speak to Mechanic again, and Mr. Kerman will reach out via your hideout intelligence center.\n\nYou will now unlock a new craft in your intelligce center using a green keycard and two more using red and blue keycards. The red and blue keycard crafts are misleading and a waste of money, only use the green one!",
+        outgoing: [
+          { id: "f8->f9",
+            to: "f9" }
+        ],
+      },
+      {
+        id: "f9",
+        type: "regular",
+        title: "Finishing the quest line",
+        description: "Once the A.P. Green keycard is crafted, grab it and the Terragroup corporate apartment key you found on Shoreline, then head to Streets. You need to make your way to the Cardinal apartment complex in the north west of the map. Inside, find apartment 1 and enter it. Inside apartment 1, you will find a secret room that you can enter using the A.P. Green keycard. In this room, you need to find 4 documents, then your quest is complete.",
+      }
     ]),
   },
   {
