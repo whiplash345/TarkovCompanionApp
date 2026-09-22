@@ -654,27 +654,133 @@ export const sideTaskDefinitions: SideTaskDefinition[] = [
     id: "they-are-already-here",
     name: "They Are Already Here",
     icon: require("../../assets/They_Are_Already_Here_Icon.webp"),
-    tree: new Tree("they-are-already-here", "they-are-already-here-intro", [
+    tree: new Tree("they-are-already-here", "g1", [
       {
-        id: "they-are-already-here-intro",
+        id: "g1",
         type: "regular",
-        title: "They Are Already Here: Begin the task",
-        description: "Add the opening objective and instructions for They Are Already Here here.",
+        title: "How to initiate the quest",
+        description: "You can start this quest line four ways.\n\nFirst, find a note inside any of the locked marked rooms on Customs, Reserve, or Streets.\n\nSecond, find the note in one of the 2 marked circles on Woods.\n\nThird, pick up the note from the marked circle on Shoreline, in the back of the house on scav island.\n\nFourth, kill any cultist on any location.",
         outgoing: [
           {
-            id: "they-are-already-here-intro->they-are-already-here-finale",
-            to: "they-are-already-here-finale",
+            id: "g1->g2",
+            to: "g2",
           },
         ],
       },
       {
-        id: "they-are-already-here-finale",
+        id: "g2",
         type: "regular",
-        title: "They Are Already Here: Complete the task",
-        description: "Add the final objective and instructions for They Are Already Here here.",
-        outgoing: [],
-        isEnd: true,
+        title: "Investiage the cultists torture house",
+        description: "Head to Ligthouse and bring a cassete player with you. Head to the sunken village, and in one of the houses you will find evidence of the cultists, and among it a cassete tape. You should also find a key(Cult victim's apartment key) in one of 4 set spawns in the same house. Then, extract.",
+        outgoing: [
+          {
+            id: "g2->g3",
+            to: "g3",
+          },
+        ],
       },
+      {
+        id: "g3",
+        type: "regular",
+        title: "Investigate the cult victim's apartment",
+        description: "Next, head to Streets to find the cult victim's apartment with the key you found and a cassete player. In the far north east of the map, you will find an apartment building. Make your way up to the third floor, then in the locked apartment 5. In here you should find a note, another cassete tape, and a Book or the Arrival(picking this book up will activate the quest line Blue Fire if it isn't already active). Then, extract.",
+        outgoing: [
+          {
+            id: "g3->g4",
+            to: "g4",
+          },
+        ],
+      },
+      {
+        id: "g4",
+        type: "regular",
+        title: "Kill a cultist priest",
+        description: "Speak to Mechanic about what you found and he will direct you to the cultists. You now need to eliminate a cultist priest.",
+        outgoing: [
+          {
+            id: "g4->g5",
+            to: "g5",
+          },
+        ],
+      },
+      {
+        id: "g5",
+        type: "regular",
+        title: "Find the cultist priest's note",
+        description: "After killing the priest, you need to head to a any locked marked room on Customs, Reserve, or Streets. Inside, you will find a new note from the cultist priest.",
+        outgoing: [
+          {
+            id: "g5->g6",
+            to: "g6",
+          },
+        ],
+      },
+      {
+        id: "g6",
+        type: "regular",
+        title: "Find more info on Lighthouse",
+        description: "Your quest should update with three objectives on Lighthouse, Woods, and Shoreline. You can do these in any order, but for this guide we'll start with Lighthouse. Head to the chalet with the blue roof. Outside on the road the the enterence, you will find an orange atv, and on it a keycard you need. You also need to find a note, which is on one of the second floor balconies between a mattress and a wooden board covered in cultist symbols. Then, extract.",
+        outgoing: [
+          {
+            id: "g6->g7",
+            to: "g7",
+          },
+        ],
+      },
+      {
+        id: "g7",
+        type: "regular",
+        title: "Find more info on Woods",
+        description: "Your quest now leads to Woods. In the sunken village, you need to find a house on the east side. Inside, there will be evidence of cultists, and inside you will need to pick up a paper from a whiteboard. Then, extract.",
+        outgoing: [
+          {
+            id: "g7->g8",
+            to: "g8",
+          },
+        ],
+      },
+      {
+        id: "g8",
+        type: "regular",
+        title: "Find more info on Shoreline",
+        description: "Next, you need to head to Shoreline to repair a radio tower with a toolset. Inside the shack next to the tower if where you repair. You will also need to find a body on the hill leading up to the tower, and next to it's hand a note. Then, extract.",
+        outgoing: [
+          {
+            id: "g8->g9",
+            to: "g9",
+          },
+        ],
+      },
+      {
+        id: "g9",
+        type: "regular",
+        title: "Access security room on Interchange",
+        description: "Visit Mechanic tell him of all the info you found and get your next steps. You will unlock a craft in intelligence center level 1 to restore the keycard you found on Lighthouse. Once crafted, head to the power station on Interchange with the keycard, your cassete player, and an empty USB flash drive(just a normal flash drive). Turn on the power, then make your way the to basement stairs. Once down, you will see a panel next to a locked door. Swipe your restored keycard to open it and enter. Once inside, you will see another panel next to the door, which you need to activate with your keycard to restore the power to that room. Then, head to the server room and turn on the cooling system using a lever in the back. After that, to the left of the cooling system lever, insert your usb drive into the server rack. Finally, head back to the enterence door and there should be a safe, now opened after turning on the cooling system. Grab the cassete tape from it, listen to it, then extract.",
+        outgoing: [
+          {
+            id: "g9->g10",
+            to: "g10",
+          },
+        ],
+      },
+      {
+        id: "g10",
+        type: "regular",
+        title: "Return to the security room",
+        description: "You now need to head back to the security room on Interchange. Turn on the power station power, enter the security room, then turn on the security room power via the panel on the wall. Now, this next step is crucial to obtain the important evidence, which is needed to complete the Savior ending. On a desk in the main room, you will find a note. Once you read it, head to the server room, and underneath a table press a buttom. After pressing the buttom under the table, retrive the flash drive and extract. If you die before extracting, you will need to re-plant to flash drive and collect it the same way in a separate raid. If you do not press the buttom underneath the table, you will not get the major evidence needed for the Savior ending, or the achievement \"And The Light Went Out\".",
+        outgoing: [
+          {
+            id: "g10->g11",
+            to: "g11",
+          },
+        ],
+      },
+      {
+        id: "g11",
+        type: "regular",
+        title: "Finishing the quest line",
+        description: "Speak to Mechanic and hand over to flash drive. Mechanic will then send the major evidence in the mail, which you can read in your handbook. After completing this quest, if you have not unlocked it already, The Unhead quest line will become available.",
+      }
     ]),
   },
   {
