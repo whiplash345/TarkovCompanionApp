@@ -787,21 +787,96 @@ export const sideTaskDefinitions: SideTaskDefinition[] = [
     id: "tour",
     name: "Tour",
     icon: require("../../assets/Tour_Icon.webp"),
-    tree: new Tree("tour", "tour-intro", [
+    tree: new Tree("tour", "h1", [
       {
-        id: "tour-intro",
+        id: "h1",
         type: "regular",
-        title: "Tour: Begin the task",
-        description: "Add the opening objective and instructions for Tour here.",
-        outgoing: [{ id: "tour-intro->tour-finale", to: "tour-finale" }],
+        title: "Starting the quest line",
+        description: "Upon loading into the game, this quest line will be available. You will have to finish it to unlock most of the traders and maps. Complete the tutorial, then speak to Therapist. You will need to hand her 250,000 rubles, which unlocks the map Streets of Tarkov.",
+        outgoing: [
+          {
+          id: "h1->h2",
+          to: "h2" 
+          }
+        ],
       },
       {
-        id: "tour-finale",
+        id: "h2",
         type: "regular",
-        title: "Tour: Complete the task",
-        description: "Add the final objective and instructions for Tour here.",
-        outgoing: [],
-        isEnd: true,
+        title: "Speak to Ragman about Interchange",
+        description: "Next, speak to Ragman, who will direct you to Interchange. Head to the map and survive or run-through the location. If you attempt this and die three times, the quest will complete automatically.",
+        outgoing: [
+          {
+          id: "h2->h3",
+          to: "h3" 
+          }
+        ],
+      },
+      {
+        id: "h3",
+        type: "regular",
+        title: "Speak to Skier about Customs",
+        description: "Now, speak to Skier, who will direct you to Customs. You need to survive or run-thorugh the location, or visit it three times in total, just like Interchange. On top of this, you will also need to hand Skier 5 building materials or tools with the found in raid(FIR) status.",
+        outgoing: [
+          {
+          id: "h4->h4",
+          to: "h4" 
+          }
+        ],
+      },
+      {
+        id: "h4",
+        type: "regular",
+        title: "Speak to Mechanic about Factory",
+        description: "At this point, you will need to speak to Mechanic, who will direct you to Factory. Once again, survive or run through the location, or visit the location a total of three times. On top of this, Mechanic will require you to bring him two weapons of any kind with the FIR status.",
+        outgoing: [
+          {
+          id: "h4->h5",
+          to: "h5" 
+          }
+        ],
+      },
+      {
+        id: "h5",
+        type: "regular",
+        title: "Speak to Skier about Woods",
+        description: "Now, you need to speak to Skier again, and he will direct you to Woods. Here you need to kill 3 targets and then survive or run-through, or visit the location a total of three times like the earlier maps. The kills do not have to be in the same raid as you survive.",
+        outgoing: [
+          {
+          id: "h5->h6",
+          to: "h6" 
+          }
+        ],
+      },
+      {
+        id: "h6",
+        type: "regular",
+        title: "Visit the terminal",
+        description: "After speaking to Skier once more to complete the Woods segment, you will gain access to Shoreline. You will need to head to an intercom that leads to the terminal on the south east part of the map. Don't go past the intercom towards the terminal, or you will be shot. You need to interact with the intercom once, then you will be asked to leave, do so. If you interact too many times, you will be shot. After, survive or run-through, or visit the location a total of three times to move on.",
+        outgoing: [
+          {
+          id: "h6->h7",
+          to: "h7" 
+          }
+        ],
+      },
+      {
+        id: "h7",
+        type: "regular",
+        title: "Ask the traders about Reserve and Lighthouse",
+        description: "After leaving Shoreline, you need to speak to Prapor. He will ask you for 5 dog tags, then give you access to Reserve after handing them in. You will then need to speak to Mechanic, and he will ask for $8,000 USD. Once you hand it over, you will get access to Lighthouse. You do not need to visit either location at this time.",
+        outgoing: [
+          {
+          id: "h7->h8",
+          to: "h8" 
+          }
+        ],
+      },
+      {
+        id: "h8",
+        type: "regular",
+        title: "Finishing the quest line",
+        description: "You now have to gain access to Labs. First, you will need to obtain a Labs access keycard. After that, you need to head to either Streets of Tarkov or Factory to use that locations's transit to Labs with the keycard. Once in Labs you have to find three places:\n1. The manager's office\n2. The server room\n3. The Sewer extract\n\nYou do not need to survive this raid once you find all three locations. If you fail to find all the locations, you will need to do this again. After completing this, the story chapter is complete.",
       },
     ]),
   },
