@@ -1,5 +1,7 @@
 import { mainTree } from "./TreeBackend";
 import { sideTaskDefinitions } from "./SideTasksBackend";
+import { retrieveRagContext } from "./RagSystem";
+import { getSupabaseClient, getSupabaseFunctionError } from "./supabaseClient";
 
 export type ChatRole = "user" | "assistant";
 
@@ -20,7 +22,6 @@ export type RagDocument = {
 export type ChatRequest = {
   message: string;
   history: ChatMessage[];
-  documents: RagDocument[];
 };
 
 export type ChatBackend = (request: ChatRequest) => Promise<string>;
@@ -47,9 +48,30 @@ export function buildTaskDocuments(): RagDocument[] {
   return [...mainDocuments, ...sideDocuments];
 }
 
-export function getPlaceholderReply(message: string): string {
-  if (message.trim().length === 0) return "Tell me what you are trying to find.";
-  return "I am connected to the task assistant UI. The RAG response service will be added here next.";
-}
+const assistantSeed = `You are TarkovCompanion, a concise and reliable Escape from Tarkov quest assistant.
+Use the supplied task context when relevant. Do not invent quest steps or claim unsupported details as fact. If the context does not answer the question, say what is missing and ask a focused follow-up. Keep instructions practical and easy to follow.`;
 
-export const chatBackend: ChatBackend = async ({ message }) => getPlaceholderReply(message);
+export const chatBackend: ChatBackend = async ({ message, history }) => {
+  if (!message.trim()) return "Tell me what you are trying to find.";
+
+  const documents = buildTaskDocuments();
+  const contextDigest = await retrieveRagContext(message, documents);
+  const { data, error } = await getSupabaseClient().functions.invoke<{ reply: string }>(
+    "tarkov-chat",
+    {
+      body: {
+        action: "answer",
+        message,
+        history: history.slice(-12).map(({ role, text }) => ({ role, content: text })),
+        seed: assistantSeed,
+        context: contextDigest,
+      },
+    }
+  );
+
+  if (error) {
+    throw new Error(`Chat function failed: ${await getSupabaseFunctionError(error)}`);
+  }
+  if (!data?.reply) throw new Error("Chat function returned an empty response.");
+  return data.reply;
+};

@@ -1,0 +1,4 @@
+project_id = "tarkov-companion"
+
+[functions.tarkov-chat]
+verify_jwt = true

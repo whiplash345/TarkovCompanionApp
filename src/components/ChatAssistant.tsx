@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   KeyboardAvoidingView,
   Modal,
@@ -13,7 +14,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../constants/colors";
-import { getPlaceholderReply, ChatMessage } from "../services/ChatBackend";
+import { chatBackend, ChatMessage } from "../services/ChatBackend";
 
 const welcomeMessage: ChatMessage = {
   id: "welcome",
@@ -25,10 +26,11 @@ export default function ChatAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([welcomeMessage]);
+  const [loading, setLoading] = useState(false);
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     const text = input.trim();
-    if (!text) return;
+    if (!text || loading) return;
 
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
@@ -36,16 +38,30 @@ export default function ChatAssistant() {
       text,
     };
 
-    setMessages((current) => [
-      ...current,
-      userMessage,
-      {
-        id: `assistant-${Date.now()}`,
-        role: "assistant",
-        text: getPlaceholderReply(text),
-      },
-    ]);
+    const history = messages.filter((message) => message.id !== "welcome");
+    setMessages((current) => [...current, userMessage]);
     setInput("");
+    setLoading(true);
+
+    try {
+      const reply = await chatBackend({ message: text, history });
+      setMessages((current) => [
+        ...current,
+        { id: `assistant-${Date.now()}`, role: "assistant", text: reply },
+      ]);
+    } catch (error) {
+      console.error("[ChatAssistant] Unable to get a reply:", error);
+      setMessages((current) => [
+        ...current,
+        {
+          id: `assistant-${Date.now()}`,
+          role: "assistant",
+          text: "I couldn't reach the assistant service. Check the app connection and Supabase setup, then try again.",
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -112,6 +128,7 @@ export default function ChatAssistant() {
                   value={input}
                   onChangeText={setInput}
                   onSubmitEditing={sendMessage}
+                  editable={!loading}
                   placeholder="Ask about a task..."
                   placeholderTextColor="#7d8585"
                   returnKeyType="send"
@@ -121,11 +138,15 @@ export default function ChatAssistant() {
                   accessibilityLabel="Send message"
                   accessibilityRole="button"
                   activeOpacity={0.8}
-                  disabled={!input.trim()}
+                  disabled={!input.trim() || loading}
                   onPress={sendMessage}
-                  style={[styles.sendButton, !input.trim() && styles.sendButtonDisabled]}
+                  style={[styles.sendButton, (!input.trim() || loading) && styles.sendButtonDisabled]}
                 >
-                  <Ionicons name="arrow-up" size={20} color={Colors.backgroundPrimary} />
+                  {loading ? (
+                    <ActivityIndicator size="small" color={Colors.backgroundPrimary} />
+                  ) : (
+                    <Ionicons name="arrow-up" size={20} color={Colors.backgroundPrimary} />
+                  )}
                 </TouchableOpacity>
               </View>
             </View>
